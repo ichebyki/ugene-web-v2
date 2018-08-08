@@ -1,5 +1,5 @@
 {
-  "name": "spring-react-boilerplate",
+  "name": "ugene-web",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -7,9 +7,9 @@
     "react-scripts": "^1.0.17"
   },
   "dependencies": {
-    "@stomp/stompjs": "^4.0.2",
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
+    "@stomp/stompjs": "^4.0.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "jwt-decode": "^2.2.0",
@@ -19,7 +19,11 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "next",
+    "react-perfect-scrollbar": "latest",
+    "react-split-pane": "latest",
     "reactstrap": "^5.0.0-beta.3",
+    "react-bootstrap": "latest",
+    "semantic-ui-react": "latest",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "sanitize.css": "^5.0.0",

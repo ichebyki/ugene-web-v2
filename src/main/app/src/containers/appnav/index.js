@@ -99,21 +99,23 @@ class AppNav extends React.Component<Props, State> {
         const { roles, signedIn, username } = this.props.auth;
 
         return (
-            <Navbar color="dark" expand={true} fixed="top">
-                <NavbarBrand href="/">spring-react-boilerplate</NavbarBrand>
-                <Nav className="d-flex ml-auto" horizontal="end" navbar>
-                    {this.socketLink()}
-                    {this.userLink(signedIn, username)}
-                    {this.roleLink(signedIn, roles)}
-                    <NavItem>
-                        <NavLink><Link to="/">Home</Link></NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink><Link to="/about-us">About</Link></NavLink>
-                    </NavItem>
-                    {this.authLink(signedIn)}
-                </Nav>
-            </Navbar>
+            <div>
+                <Navbar className="py-0" color="light" expand={true} fixed="top">
+                    <NavbarBrand href="http://ugene.net/">UGENE</NavbarBrand>
+                    <Nav className="d-flex ml-auto" horizontal="end" navbar>
+                        {this.socketLink()}
+                        {this.userLink(signedIn, username)}
+                        {this.roleLink(signedIn, roles)}
+                        <NavItem>
+                            <NavLink><Link to="/">Home</Link></NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink><Link to="/about-us">About</Link></NavLink>
+                        </NavItem>
+                        {this.authLink(signedIn)}
+                    </Nav>
+                </Navbar>
+            </div>
         )
     }
 }
