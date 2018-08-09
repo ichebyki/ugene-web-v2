@@ -54,17 +54,17 @@ class UgeneWorkflow extends React.Component<Props, State> {
     render() {
         const divStyle = {
             height: (this.state._hei - 48) + 'px',
-            padding: 0 + 'px',
+            /*padding: 0 + 'px', ZZZ*/
         };
 
         return (
             <SplitPane style={divStyle} split="vertical" minSize={0} defaultSize={200} primary="second">
                 <PerfectScrollbar>
-                    <Container>
+                    <div style={{margin: "0.3em"}}>
                         <Route exact path="/" component={Home} />
                         <Route exact path="/signin" component={SignIn} />
                         <Route exact path="/about-us" component={About} />
-                    </Container>
+                    </div>
                 </PerfectScrollbar>
                 <PerfectScrollbar>
                     3,2
