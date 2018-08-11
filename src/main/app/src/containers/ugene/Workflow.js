@@ -14,8 +14,8 @@ import About from "../about";
 import type, {SocketState} from "../../data/modules/websockets";
 import {AuthState} from "../../data/modules/auth";
 
-import ScrollPane from '../ugene/scrollpane';
-import SplitPane from '../ugene/splitpane';
+import ScrollPane from './ScrollPane';
+import SplitPane from './SplitPane';
 
 type Props = {
 };
