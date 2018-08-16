@@ -3,7 +3,7 @@ import * as types from './actionTypes';
 
 import SockJS from 'sockjs-client';
 import Stomp  from '@stomp/stompjs';
-import * as Names from "../constants/names";
+import * as Names from "../constants/Names";
 
 export const SOCKETS_CONNECTING = 'SOCKETS_CONNECTING';
 export const SOCKETS_CONNECT = 'SOCKETS_CONNECT';

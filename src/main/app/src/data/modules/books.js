@@ -1,7 +1,7 @@
 // @flow
 import axios from 'axios';
 import type { Thunk } from '../';
-import * as Names from "../../constants/names";
+import * as Names from "../../constants/Names";
 
 export type Book = { id: number, name: string, price: number };
 export type BookAddRequest = { name: string, price: number};

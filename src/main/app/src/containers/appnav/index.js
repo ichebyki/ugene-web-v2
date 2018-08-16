@@ -10,7 +10,7 @@ import { logout } from '../../data/modules/auth';
 import { socketsSubscribe } from '../../middleware/socketActions';
 import type { SocketState } from "../../data/modules/websockets";
 
-import * as Names from '../../constants/names';
+import * as Names from '../../constants/Names';
 
 type Props = {
     auth: AuthState,

@@ -10,7 +10,7 @@ import { Container } from 'reactstrap';
 
 import Home from "../home";
 import SignIn from "../signin";
-import About from "../about";
+import About from "../About";
 import type, {SocketState} from "../../data/modules/websockets";
 import {AuthState} from "../../data/modules/auth";
 

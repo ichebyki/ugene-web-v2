@@ -12,18 +12,19 @@
     "jwt-decode": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-perfect-scrollbar": "latest",
     "react-redux": "latest",
     "react-router": "latest",
     "react-router-dom": "latest",
     "react-router-redux": "next",
-    "react-split-pane": "latest",
-    "react-toggle-display": "latest",
     "redux": "latest",
     "redux-thunk": "latest",
-    "semantic-ui-css": "latest",
+    "sockjs-client": "latest",
+    
     "semantic-ui-react": "latest",
-    "sockjs-client": "latest"
+    "semantic-ui-css": "latest",
+    "react-perfect-scrollbar": "latest",
+    "react-split-pane": "latest",
+    "react-toggle-display": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

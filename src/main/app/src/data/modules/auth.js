@@ -4,7 +4,7 @@ import type {Thunk} from '../';
 
 import jwt_decode from 'jwt-decode';
 
-import * as Names from '../../constants/names';
+import * as Names from '../../constants/Names';
 
 import {socketsConnect, socketsDisconnect} from '../../middleware/socketActions';
 
