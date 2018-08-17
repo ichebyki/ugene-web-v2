@@ -1,6 +1,12 @@
 /*
  * action types
  */
+export const About = "ABOUT";
+export const Help = "HELP";
+export const SignIn = "SIGN_IN";
+export const SignUp = "SIGN_UP";
+export const SignOut = "SIGN_OUT";
+
 export const UgeneProject = {
     CREATE     : 'CREATE',
     DELETE     : 'DELETE',

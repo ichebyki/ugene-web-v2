@@ -4,7 +4,10 @@
   "private": true,
   "devDependencies": {
     "flow-bin": "latest",
-    "react-scripts": "latest"
+    "react-scripts": "latest",
+    "redux-devtools": "latest",
+    "redux-devtools-log-monitor": "latest",
+    "redux-devtools-dock-monitor": "latest"
   },
   "dependencies": {
     "@stomp/stompjs": "latest",
@@ -19,7 +22,6 @@
     "redux": "latest",
     "redux-thunk": "latest",
     "sockjs-client": "latest",
-    
     "semantic-ui-react": "latest",
     "semantic-ui-css": "latest",
     "react-perfect-scrollbar": "latest",
