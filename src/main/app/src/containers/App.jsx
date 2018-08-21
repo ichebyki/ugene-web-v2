@@ -6,17 +6,18 @@ import { connect } from 'react-redux';
 import { Container } from "semantic-ui-react";
 
 import * as ugeneActions from '../actions/ActionsGlobal'
-import TabPane from './ugene/TabPane/TabPane';
+import UgeneTabPane from './ugene/TabPane/TabPane';
 import MenuBar from './ugene/MenuBar';
 import UgeneModal from './ugene/Modals';
 
 import 'semantic-ui-css/semantic.min.css';
 import '../style/Ugene.css';
+import './App.css';
 
-const UnitInfo = () => <div>Unit Info content</div>;
-const Pilots = () => <div>Pilots content</div>;
-const Mechs = () => <div>Mechs content</div>;
-const UnitOrganization = () => <div>Unit Organization content</div>;
+const UnitInfo =            <div>Unit Info content</div>
+const Pilots =              <div>Pilots content</div>
+const Mechs =               <div>Mechs content</div>
+const UnitOrganization =    <div>Unit Organization content</div>
 
 
 class App extends Component {
@@ -39,21 +40,24 @@ class App extends Component {
 
     render() {
         const tabs = [
-            {name : "unitInfo", label : "Unit Info", component : UnitInfo,},
-            {name : "pilots", label : "Pilots", component : Pilots,},
-            {name : "mechs", label : "Mechs", component : Mechs,},
-            {name : "unitOrganization", label : "Unit Organization", component : UnitOrganization,}
+            {menuItem: { key: 'user', icon: 'user', content: 'user' },    content : UnitInfo,},
+            {menuItem: { key: 'sidebar', icon: 'sidebar', content: 'sidebar' }, content : Pilots,},
+            {menuItem: { key: 'world', icon: 'world', content: 'world' },   content : Mechs,},
+            {menuItem: { key: 'users', icon: 'users', content: 'users' },   content : UnitOrganization,}
         ];
 
         const modalName = this.getModalName();
 
         return (
-            <div className="App">
+            <div className="ugene-application">
                 <MenuBar {...this.props.actions} />
                 <UgeneModal name={modalName} dimmer={'inverted'} onclose={this.closeModal.bind(this)} />
-                <Container>
-                    <TabPane tabs={tabs} size="massive" />
-                </Container>
+                <div>
+                    <Container fluid>
+                        <UgeneTabPane renderActiveOnly
+                                      tabs={tabs} />
+                    </Container>
+                </div>
             </div>
         );
     }

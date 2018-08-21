@@ -1,17 +1,16 @@
 import React from "react";
 import {Menu} from "semantic-ui-react";
-import ToggleDisplay from "react-toggle-display";
 
-import Tab from "./Tab";
+import _Tab from "./Tab";
 
-const TabBar = (props) => {
+const _TabBar = (props) => {
     const {tabs, currentTab, onTabClick, ...otherProps} = props;
 
     const tabItems = tabs.map(tabInfo => {
         const {name, label} = tabInfo;
 
         return (
-            <Tab
+            <_Tab
                 key={name}
                 name={name}
                 label={label}
@@ -48,4 +47,4 @@ const TabBar = (props) => {
     )
 }
 
-export default TabBar;
+export default _TabBar;

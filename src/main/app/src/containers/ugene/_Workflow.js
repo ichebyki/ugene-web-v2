@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Container } from 'reactstrap';
 
 import Home from "../home";
-import SignIn from "../signin/_index";
+/*import SignIn from "../signin/_index";*/
 import About from "../About";
 import type, {SocketState} from "../../data/modules/websockets";
 import {AuthState} from "../../data/modules/auth";
@@ -38,8 +38,8 @@ class UgeneWorkflow extends React.Component<Props, State> {
         return (
             <SplitPane split="vertical" minSize={0} defaultSize={200} primary="second">
                 <ScrollPane>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/signin" component={SignIn} />
+                    <Route exact path="/" component={Home} />{
+                    /*<Route exact path="/signin" component={SignIn} />*/}
                     <Route exact path="/about-us" component={About} />
                 </ScrollPane>
                 <ScrollPane>

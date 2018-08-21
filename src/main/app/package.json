@@ -25,8 +25,7 @@
     "semantic-ui-react": "latest",
     "semantic-ui-css": "latest",
     "react-perfect-scrollbar": "latest",
-    "react-split-pane": "latest",
-    "react-toggle-display": "latest"
+    "react-split-pane": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
