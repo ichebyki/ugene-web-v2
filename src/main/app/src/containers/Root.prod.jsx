@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'react-router-redux';
 
 import App from './App.jsx';
 import "semantic-ui-css/semantic.css";
-import './index.css';
+import '../index.css';
 
 export default class Root extends Component {
     render() {

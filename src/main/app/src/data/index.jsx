@@ -4,14 +4,16 @@ import type { Dispatch } from 'redux';
 import { routerReducer } from "react-router-redux";
 
 import auth from './modules/auth';
-import books from './modules/books';
 import websockets from './modules/websockets';
+import books from './modules/books';
+import ugeneMenuBar from './ugene/ReducerMenuBar';
 
 const rootReducer = combineReducers({
     router: routerReducer,
     auth,
+    websockets,
     books,
-    websockets
+    ugeneMenuBar
 });
 
 export default rootReducer;

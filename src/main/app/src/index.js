@@ -8,6 +8,6 @@ import './index.css';
 
 const target = document.querySelector('#root');
 render(
-    <Root store={store} history={history}/>,
+    <Root store={store} history={history} />,
     target
 );

@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Container } from 'reactstrap';
 
 import Home from "../home";
-import SignIn from "../signin";
+import SignIn from "../signin/_index";
 import About from "../About";
 import type, {SocketState} from "../../data/modules/websockets";
 import {AuthState} from "../../data/modules/auth";

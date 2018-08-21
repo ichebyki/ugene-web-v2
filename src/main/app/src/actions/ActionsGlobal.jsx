@@ -1,36 +1,16 @@
-import { About, Help, SignIn, SignUp, SignOut } from '../constants/ActionTypes'
+import { _EMPTY_, About, Help, SignIn, SignUp, SignOut } from '../constants/ActionTypes';
 
-export function showAbout() {
+export function clearActiveMenuBarItem() {
     return {
-        type: About,
-        text: "We are from Unipro"
+        type: _EMPTY_,
+        activeMenuBarItem: "_EMPTY_",
+        text: ""
     }
 }
+//export const clearActiveMenuBarItem = () => ({ type: null,  activeMenuBarItem: null,     text: null });
 
-export function showHelp() {
-    return {
-        type: Help,
-        text: "This is a help"
-    }
-}
-
-export function signIn() {
-    return {
-        type: SignIn,
-        text: "Please Sign in"
-    }
-}
-
-export function signOut() {
-    return {
-        type: SignOut,
-        text: "You can sign out"
-    }
-}
-
-export function signUp() {
-    return {
-        type: SignUp,
-        text: "Please register before sign in"
-    }
-}
+export const showAbout = () => ({ type: About,  activeMenuBarItem: "About",     text: "We are from Unipro" });
+export const showHelp = () => ({ type: Help,    activeMenuBarItem: "showHelp",  text: "This is a help" });
+export const signIn = () => ({ type: SignIn,    activeMenuBarItem: "signIn",    text: "Please Sign in" });
+export const signOut = () => ({ type: SignOut,  activeMenuBarItem: "signOut",   text: "You can sign out" });
+export const signUp = () => ({ type: SignUp,    activeMenuBarItem: "signUp",    text: "Please register before sign in" });

@@ -5,6 +5,8 @@ import { ConnectedRouter } from 'react-router-redux';
 
 import DevTools from '../utils/DevTools'
 import App from './App.jsx';
+import "semantic-ui-css/semantic.css";
+import '../index.css';
 
 export default class Root extends Component {
     render() {
@@ -14,8 +16,8 @@ export default class Root extends Component {
             <Provider store={store}>
                 <ConnectedRouter history={history}>
                     <div id="app-react-spring">
-                        <App/>
-                        <DevTools/>
+                        <App />
+                        <DevTools />
                     </div>
                 </ConnectedRouter>
             </Provider>

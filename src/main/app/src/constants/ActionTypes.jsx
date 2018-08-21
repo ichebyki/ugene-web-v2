@@ -1,6 +1,8 @@
 /*
  * action types
  */
+export const _EMPTY_ = "_EMPTY_";
+
 export const About = "ABOUT";
 export const Help = "HELP";
 export const SignIn = "SIGN_IN";

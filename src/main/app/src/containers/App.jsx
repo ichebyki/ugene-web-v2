@@ -5,25 +5,36 @@ import { connect } from 'react-redux';
 
 import { Container } from "semantic-ui-react";
 
-import '../style/Ugene.css';
+import * as ugeneActions from '../actions/ActionsGlobal'
 import TabPane from './ugene/TabPane/TabPane';
 import MenuBar from './ugene/MenuBar';
+import UgeneModal from './ugene/Modals';
 
+import 'semantic-ui-css/semantic.min.css';
+import '../style/Ugene.css';
 
 const UnitInfo = () => <div>Unit Info content</div>;
 const Pilots = () => <div>Pilots content</div>;
 const Mechs = () => <div>Mechs content</div>;
 const UnitOrganization = () => <div>Unit Organization content</div>;
 
-connect(state => ({
-    windowslist: state.windowslist
-}));
 
 class App extends Component {
 
     static propTypes = {
-        store: PropTypes.object.isRequired,
-        windowslist: PropTypes.object.isRequired,
+        appState: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
+    };
+
+    getModalName() {
+        if (this.props.appState.ugeneMenuBar.activeMenuBarItem) {
+            return this.props.appState.ugeneMenuBar.activeMenuBarItem;
+        }
+        return "";
+    }
+
+    closeModal() {
+        this.props.actions.clearActiveMenuBarItem();
     }
 
     render() {
@@ -34,9 +45,12 @@ class App extends Component {
             {name : "unitOrganization", label : "Unit Organization", component : UnitOrganization,}
         ];
 
+        const modalName = this.getModalName();
+
         return (
             <div className="App">
-                <MenuBar/>
+                <MenuBar {...this.props.actions} />
+                <UgeneModal name={modalName} dimmer={'inverted'} onclose={this.closeModal.bind(this)} />
                 <Container>
                     <TabPane tabs={tabs} size="massive" />
                 </Container>
@@ -45,4 +59,15 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapStateToProps = state => ({
+    appState: state
+});
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(ugeneActions, dispatch)
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+) (App);

@@ -1,0 +1,35 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { About, Help, SignIn, SignUp, SignOut } from '../../../constants/ActionTypes';
+import ModalAbout from './ModalAbout';
+import ModalHelp from './ModalHelp';
+import ModalSignIn from './ModalSignIn';
+
+export default class UgeneModal extends Component {
+
+    static propTypes = {
+        name: PropTypes.string.isRequired,
+        dimmer: PropTypes.string,
+        onclose: PropTypes.func.isRequired
+    };
+
+    render() {
+        const dimmer = this.props.dimmer ? this.props.dimmer : 'inverted';
+        switch (this.props.name) {
+            case About:
+                return (
+                    <ModalAbout open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                );
+            case Help:
+                return (
+                    <ModalHelp open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                );
+            case SignIn:
+                return (
+                    <ModalSignIn open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                );
+        }
+        return null;
+    }
+}

@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button, Container, Form, FormGroup, Label, ListGroup, ListGroupItem, Input, Alert } from 'reactstrap';
+import { Button, Container, Form, Label, List, Input, Modal, Message, Grid } from 'semantic-ui-react';
 
 import { authenticated, login, logout } from '../../data/modules/auth';
 import type { AuthState, Role } from '../../data/modules/auth';
@@ -71,31 +71,32 @@ class SignIn extends React.Component<Props, State> {
 
         return (
             <div>
-                <Alert color="warning">
+                <Message negative compact>
                     <h1>Authentication failed!</h1>
                     <div>Please Enter a valid username and password</div>
-                </Alert>
+                </Message>
+                <br />
             </div>
         );
     }
 
     authSucceededMessage() {
         if (this.props.authState.signedIn) {
-
             const assignedRoles = this.props.authState.roles.map(item => {
-                return <ListGroupItem>{item}</ListGroupItem>
+                return <List.Item>{item}</List.Item>
             });
 
             return (
                 <div>
-                    <Alert color="success">
+                    <Message positive compact>
                         <h1>Authentication Succeeded!</h1>
                         <div>Signed in as: {this.props.authState.username}</div>
-                    </Alert>
-                    <ListGroup>
-                        <ListGroupItem disabled>Assigned Roles</ListGroupItem>
-                        {assignedRoles}
-                    </ListGroup>
+                        <List>
+                            <List.Header>Assigned Roles</List.Header>
+                            {assignedRoles}
+                        </List>
+                    </Message>
+                    <br />
                 </div>
             )
         }
@@ -103,25 +104,49 @@ class SignIn extends React.Component<Props, State> {
         return null;
     }
 
+    authCurrentMessage() {
+        const { authState } = this.props;
+        const roleList = authState.roles.join();
+        const roleListDiv = !authState.signedIn ? <div>Current roles: {roleList}</div> : '';
+
+        if (this.props.authState.authFailure) {
+            return this.authFailedMessage();
+        } else if (this.props.authState.signedIn) {
+            return this.authSucceededMessage();
+        } else {
+            const assignedRoles = this.props.authState.roles.map(item => {
+                return <List.Item>{item}</List.Item>
+            });
+
+            return (
+                <div>
+                    <Message positive compact>
+                        <div>Signed in as: {this.props.authState.username}</div>
+                        <List>
+                            <List.Header>Assigned Roles</List.Header>
+                            {assignedRoles}
+                        </List>
+                    </Message>
+                    <br />
+                </div>
+            )
+        }
+
+    }
+
     render() {
 
         const { username, password } = this.state;
         const { authState } = this.props;
 
-        const roleList = authState.roles.join();
-
         return (
             <div>
-
                 <Form>
-                    <h1>Sign In</h1>
                     <Container>
-                        {this.authSucceededMessage()}
-                        {this.authFailedMessage()}
+                        {this.authCurrentMessage()}
                     </Container>
-                    <br/>
-                    <FormGroup>
-                        <Label for="username">Username</Label>
+                    <Form.Field inline>
+                        <label htmlFor="username">Username</label>
                         <Input type="username"
                                name="username"
                                id="username"
@@ -129,9 +154,9 @@ class SignIn extends React.Component<Props, State> {
                                value={username}
                                onChange={this.handleChange}
                         />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="username">Password</Label>
+                    </Form.Field>
+                    <Form.Field inline>
+                        <label htmlFor="username">Password</label>
                         <Input type="password"
                                name="password"
                                id="password"
@@ -139,14 +164,10 @@ class SignIn extends React.Component<Props, State> {
                                value={password}
                                onChange={this.handleChange}
                         />
-                    </FormGroup>
-
+                    </Form.Field>
                     <Button disabled={authState.signedIn} onClick={e => this.handleOnSignIn(e)}>Login</Button>{' '}
                     <Button disabled={!authState.signedIn} onClick={e => this.handleSignOut(e)}>Logout</Button>
                 </Form>
-                <br/>
-                <div>Roles: {roleList}</div>
-
             </div>
         );
     }
