@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Container } from "semantic-ui-react";
+import {Container, Tab as SemanticTab} from "semantic-ui-react";
 
-import * as ugeneActions from '../actions/ActionsGlobal'
-import UgeneTabPane from './ugene/TabPane/TabPane';
+import * as ugeneActionsGlobal from '../actions/ActionsGlobal';
+import * as ugeneActionsTabs from '../actions/ActionsTabs';
+import UgeneTabPane from './ugene/TabPane';
 import MenuBar from './ugene/MenuBar';
 import UgeneModal from './ugene/Modals';
 
@@ -14,10 +15,6 @@ import 'semantic-ui-css/semantic.min.css';
 import '../style/Ugene.css';
 import './App.css';
 
-const UnitInfo =            <div>Unit Info content</div>
-const Pilots =              <div>Pilots content</div>
-const Mechs =               <div>Mechs content</div>
-const UnitOrganization =    <div>Unit Organization content</div>
 
 
 class App extends Component {
@@ -39,14 +36,8 @@ class App extends Component {
     }
 
     render() {
-        const tabs = [
-            {menuItem: { key: 'user', icon: 'user', content: 'user' },    content : UnitInfo,},
-            {menuItem: { key: 'sidebar', icon: 'sidebar', content: 'sidebar' }, content : Pilots,},
-            {menuItem: { key: 'world', icon: 'world', content: 'world' },   content : Mechs,},
-            {menuItem: { key: 'users', icon: 'users', content: 'users' },   content : UnitOrganization,}
-        ];
-
         const modalName = this.getModalName();
+        const tabs = this.props.appState.ugeneTabs.tabs;
 
         return (
             <div className="ugene-application">
@@ -54,7 +45,8 @@ class App extends Component {
                 <UgeneModal name={modalName} dimmer={'inverted'} onclose={this.closeModal.bind(this)} />
                 <div>
                     <Container fluid>
-                        <UgeneTabPane renderActiveOnly
+                        <UgeneTabPane {...this.props.actions /* must be actions from props, not the following !!! ...ugeneActionsTabs*/}
+                                      renderActiveOnly
                                       tabs={tabs} />
                     </Container>
                 </div>
@@ -68,7 +60,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(ugeneActions, dispatch)
+    actions: bindActionCreators(
+        {
+            ...ugeneActionsGlobal,
+            ...ugeneActionsTabs
+        },
+        dispatch
+    )
 });
 
 export default connect(

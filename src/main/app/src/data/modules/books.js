@@ -50,13 +50,12 @@ export function refreshBooks() : Thunk<BooksRefreshedAction> {
     let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
 
     return dispatch => {
-        axios.get(`/api/allbooks`,{
+        axios.get(`/api/allbooks`, {
             headers: {authorization: headerToken}
-        })
-            .then(
-                success => dispatch(booksRefreshed(success.data)),
-                failure => console.log(failure)
-            );
+        }).then(
+            success => dispatch(booksRefreshed(success.data)),
+            failure => console.log(failure)
+        );
     };
 }
 
@@ -66,12 +65,11 @@ export function requestBookAdd(bookAddRequest: BookAddRequest) : Thunk<BooksRefr
     let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
 
     return dispatch => {
-        axios.post('/api/addbook', bookAddRequest,{
+        axios.post('/api/addbook', bookAddRequest, {
             headers: {authorization: headerToken}
-        })
-            .then(
-                success => dispatch(booksRefreshed(success.data)),
-                failure => console.log(failure)
-            );
+        }).then(
+            success => dispatch(booksRefreshed(success.data)),
+            failure => console.log(failure)
+        );
     };
 }

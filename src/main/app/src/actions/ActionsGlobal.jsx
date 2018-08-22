@@ -1,14 +1,13 @@
 import { _EMPTY_, About, Help, SignIn, SignUp, SignOut } from '../constants/ActionTypes';
 
-export function clearActiveMenuBarItem() {
+/*export function clearActiveMenuBarItem() {
     return {
         type: _EMPTY_,
         activeMenuBarItem: "_EMPTY_",
         text: ""
     }
-}
-//export const clearActiveMenuBarItem = () => ({ type: null,  activeMenuBarItem: null,     text: null });
-
+}*/
+export const clearActiveMenuBarItem = () => ({ type: _EMPTY_,  activeMenuBarItem: _EMPTY_,     text: "" });
 export const showAbout = () => ({ type: About,  activeMenuBarItem: "About",     text: "We are from Unipro" });
 export const showHelp = () => ({ type: Help,    activeMenuBarItem: "showHelp",  text: "This is a help" });
 export const signIn = () => ({ type: SignIn,    activeMenuBarItem: "signIn",    text: "Please Sign in" });

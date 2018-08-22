@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { List, Menu, Message, Icon, Dropdown } from 'semantic-ui-react'
 
 import { logout } from '../../data/modules/auth';
-import * as ugeneActions from '../../actions/ActionsGlobal'
+import * as ugeneActionsGlobal from '../../actions/ActionsGlobal'
 
 class MenuBar extends Component {
 
@@ -16,7 +16,8 @@ class MenuBar extends Component {
         showHelp: PropTypes.func.isRequired,
         signIn: PropTypes.func.isRequired,
         signOut: PropTypes.func.isRequired,
-        signUp: PropTypes.func.isRequired
+        signUp: PropTypes.func.isRequired,
+        createTab: PropTypes.func.isRequired
     };
 
     handleItemClick = (e, { name }) => {
@@ -35,6 +36,9 @@ class MenuBar extends Component {
                 this.props.signOut();
                 this.props.logout();
                 break;
+            case "SideBar":
+                this.props.createTab();
+                break;
             default:
                 break;
         }
@@ -43,7 +47,10 @@ class MenuBar extends Component {
     leftMenu = () => {
         return (
             <Menu.Menu position='left'>
-                <Menu.Item as='a' header>
+                <Menu.Item as='a'
+                           name={'SideBar'}
+                           onClick={this.handleItemClick.bind(this)}
+                >
                     <Icon name={'sidebar'} />
                 </Menu.Item>
             </Menu.Menu>
@@ -116,12 +123,7 @@ const mapStateToProps = state => ({
     appState: state
 });
 
-/*const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(ugeneActions, dispatch)
-});*/
-
 export default connect(
-    mapStateToProps/*,
-    mapDispatchToProps*/,
+    mapStateToProps,
     { logout }
 ) (MenuBar);

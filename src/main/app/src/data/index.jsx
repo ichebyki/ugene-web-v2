@@ -7,13 +7,15 @@ import auth from './modules/auth';
 import websockets from './modules/websockets';
 import books from './modules/books';
 import ugeneMenuBar from './ugene/ReducerMenuBar';
+import ugeneTabs from './ugene/ReducerTabs';
 
 const rootReducer = combineReducers({
     router: routerReducer,
     auth,
     websockets,
     books,
-    ugeneMenuBar
+    ugeneMenuBar,
+    ugeneTabs
 });
 
 export default rootReducer;
