@@ -11,6 +11,7 @@ export default class UgeneModal extends Component {
     static propTypes = {
         name: PropTypes.string.isRequired,
         dimmer: PropTypes.string,
+        closeIcon: PropTypes.any.isRequired,
         onclose: PropTypes.func.isRequired
     };
 
@@ -19,15 +20,15 @@ export default class UgeneModal extends Component {
         switch (this.props.name) {
             case About:
                 return (
-                    <ModalAbout open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                    <ModalAbout open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case Help:
                 return (
-                    <ModalHelp open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                    <ModalHelp open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case SignIn:
                 return (
-                    <ModalSignIn open={true} dimmer={dimmer} onclose={this.props.onclose} />
+                    <ModalSignIn open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
         }
         return null;

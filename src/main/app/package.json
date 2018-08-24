@@ -16,6 +16,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-redux": "latest",
+    "redux-persist": "latest",
     "react-router": "latest",
     "react-router-dom": "latest",
     "react-router-redux": "next",

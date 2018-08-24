@@ -10,7 +10,7 @@ class UgeneTabPane extends Component {
     static propTypes = {
         renderActiveOnly: PropTypes.bool.isRequired,
         tabs: PropTypes.array.isRequired,
-        deleteTab: PropTypes.func.isRequired
+        actions: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -46,7 +46,7 @@ class UgeneTabPane extends Component {
                     </Menu.Item>
                 ),
                 render: () =>
-                    <SemanticTab.Pane style={borders}>
+                    <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
                         {content}
                     </SemanticTab.Pane>
             };
@@ -55,6 +55,7 @@ class UgeneTabPane extends Component {
         return (
             <div className={'ugene-tab-pane'}>
                 <SemanticTab
+                    className={'ugene-tab-pane-tab'}
                     menu={{ /*pointing: true, */className: "ugene-tab-menu-wrapped" }}
                     renderActiveOnly={renderActiveOnly}
                     panes={panes}

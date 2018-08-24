@@ -1,11 +1,33 @@
-if (process.env.NODE_ENV === 'production') {
-    module.exports = require('./Root.prod');
-} else {
-    const devToolsExtension = window.devToolsExtension; // Redux dev-tools exists in browser
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-    if (typeof devToolsExtension === "function") {
-        module.exports = require('./Root.prod');
-    } else {
-        module.exports = require('./Root.dev');
+import App from './App.jsx';
+import "semantic-ui-css/semantic.css";
+import './App.css';
+import DevTools from "../utils/DevTools";
+
+
+export default class Root extends Component {
+    render() {
+        const { store, persistor, history } = this.props;
+        const needDevTools = ! (process.env.NODE_ENV === 'production' || typeof window.devToolsExtension === "function");
+
+        return (
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <div id="ugene-app-react-spring" className={'ugene-app-react-spring'}>
+                            <App/>
+                        </div>
+                        <div>
+                            {needDevTools ? <DevTools /> : <div />}
+                        </div>
+                    </PersistGate>
+                </ConnectedRouter>
+            </Provider>
+        );
     }
 }

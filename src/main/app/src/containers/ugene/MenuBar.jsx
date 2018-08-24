@@ -2,46 +2,21 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { purgeStoredState } from 'redux-persist'
 
 import { List, Menu, Message, Icon, Dropdown } from 'semantic-ui-react'
-
-import { logout } from '../../data/modules/auth';
-import * as ugeneActionsGlobal from '../../actions/ActionsGlobal'
 
 class MenuBar extends Component {
 
     static propTypes = {
-        appState: PropTypes.object.isRequired,
-        showAbout: PropTypes.func.isRequired,
-        showHelp: PropTypes.func.isRequired,
-        signIn: PropTypes.func.isRequired,
-        signOut: PropTypes.func.isRequired,
-        signUp: PropTypes.func.isRequired,
-        createTab: PropTypes.func.isRequired
+        className: PropTypes.string.isRequired,
+        signedIn: PropTypes.bool.isRequired,
+        userName: PropTypes.string.isRequired,
+        menuClick: PropTypes.func.isRequired
     };
 
     handleItemClick = (e, { name }) => {
-        switch (name) {
-            case "About":
-                this.props.showAbout();
-                break;
-            case "Help":
-                this.props.showHelp();
-                break;
-            case "SignIn":
-                this.props.signIn();
-                break;
-            case "SignOut":
-            case "Sign Out":
-                this.props.signOut();
-                this.props.logout();
-                break;
-            case "SideBar":
-                this.props.createTab();
-                break;
-            default:
-                break;
-        }
+        this.props.menuClick(name);
     };
 
     leftMenu = () => {
@@ -69,15 +44,15 @@ class MenuBar extends Component {
             const trigger = (<span><Icon name='user' /> Hello, {username}</span>);
 
             const options = [
-                { key: 'profile',  text: 'Profile',  name: 'Your Profile', onClick: this.handleItemClick.bind(this) },
-                { key: 'settings', text: 'Settings', name: 'Settings',     onClick: this.handleItemClick.bind(this) },
-                { key: 'sign-out', text: 'Sign Out', name: 'Sign Out',     onClick: this.handleItemClick.bind(this) }
+                { key: 'profile',  text: 'Profile',  name: 'Your Profile', className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) },
+                { key: 'settings', text: 'Settings', name: 'Settings',     className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) },
+                { key: 'sign-out', text: 'Sign Out', name: 'Sign Out',     className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) }
             ];
 
             return(
-                <Dropdown trigger={trigger}
+                <Dropdown className={'ugene-dropdown'}
+                          trigger={trigger}
                           options={options}
-                          className={'icon'}
                           item
                           openOnFocus
                 />
@@ -86,8 +61,8 @@ class MenuBar extends Component {
     }
 
     rightMenu = () => {
-        const signedIn = this.props.appState.auth.signedIn;
-        const username = signedIn ? this.props.appState.auth.username : "";
+        const signedIn = this.props.signedIn;
+        const username = signedIn ? this.props.userName : "";
 
         return (
             <Menu.Menu position='right'>
@@ -107,11 +82,12 @@ class MenuBar extends Component {
     };
 
     render() {
+        const { className } = this.props;
         const menuLeft = this.leftMenu();
         const menuRight = this.rightMenu();
 
         return (
-            <Menu attached='top' text>
+            <Menu className={className} attached='top' text>
                 {menuLeft}
                 {menuRight}
             </Menu>
@@ -119,11 +95,13 @@ class MenuBar extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+/*const mapStateToProps = state => ({
     appState: state
 });
 
 export default connect(
     mapStateToProps,
     { logout }
-) (MenuBar);
+) (MenuBar);*/
+
+export default MenuBar;

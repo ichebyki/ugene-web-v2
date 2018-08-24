@@ -44,7 +44,7 @@ export default function ReducerTabs(state = initialState, action) {
             if (action.tabkey && action.tabkey > 0 && action.tabkey <= state.tabkey) {
                 return {
                     ...state,
-                    tabs: state.tabs.filter(tab => tab.key != action.tabkey)
+                    tabs: state.tabs.filter(tab => tab.key !== action.tabkey)
                 }
             }
             else {

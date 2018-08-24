@@ -1,4 +1,55 @@
-.ugene-application .attached.menu {
+.ugene-app-menu-bar {
     height: 2em !important;
     min-height: 1.5em !important;
+}
+
+.ugene-app-left-side-bar-pusher {
+    width: 100%;
+}
+
+.ugene-app-left-side-bar-segment {
+    width: 100%;
+    padding: 0 !important;
+}
+
+.ugene-app-left-side-bar-pushable {
+    border: 0;
+}
+
+.ugene-app-root,
+.ugene-app-react-spring,
+.ugene-app
+{
+    border: none;
+    padding: 0;
+    height: 100%;
+}
+
+.ugene-app-left-side-bar {
+    padding: 0 !important;
+    border: none;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 2em; /* THE SAME AS .ugene-app-menu-bar HEIGH */
+    position: absolute;
+}
+
+.ugene-app-left-side-bar-pusher,
+.ugene-app-left-side-bar-pushable,
+.ugene-app-left-side-bar-segment,
+.ugene-app-content-container,
+.ugene-tab-pane {
+    border: none;
+    padding: 0 !important;
+    height: 100%;
+}
+
+.ugene-dropdown-item,
+.ugene-app-left-side-bar-sidebar .item {
+    /* height: 2em !important; */
+    min-height: 1.5em !important;
+    padding: 0.6em!important;
+    min-width: 10em !important;
+    /* width: 1em !important; */
 }

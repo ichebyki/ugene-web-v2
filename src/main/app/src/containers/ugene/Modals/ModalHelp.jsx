@@ -7,7 +7,8 @@ export default class ModalHelp extends Component {
     static propTypes = {
         open: PropTypes.bool.isRequired,
         dimmer: PropTypes.string.isRequired,
-        onclose: PropTypes.func
+        onclose: PropTypes.func,
+        closeIcon: PropTypes.any.isRequired
     };
 
     state = {
@@ -36,7 +37,7 @@ export default class ModalHelp extends Component {
 
         return (
             <Modal dimmer={dimmer}
-                   closeIcon
+                   closeIcon={this.props.closeIcon}
                    open={open}
                    closeOnDimmerClick={false}
                    closeOnDocumentClick={false}

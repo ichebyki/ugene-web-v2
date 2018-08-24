@@ -9,7 +9,7 @@ import books from './modules/books';
 import ugeneMenuBar from './ugene/ReducerMenuBar';
 import ugeneTabs from './ugene/ReducerTabs';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     router: routerReducer,
     auth,
     websockets,
@@ -17,6 +17,15 @@ const rootReducer = combineReducers({
     ugeneMenuBar,
     ugeneTabs
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === 'LOGGED_OUT') {
+        const { router } = state;
+        state = { router };
+    }
+
+    return appReducer(state, action);
+};
 
 export default rootReducer;
 

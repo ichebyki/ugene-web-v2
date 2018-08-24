@@ -10,7 +10,7 @@
     flex-wrap: wrap;
     /*height: 2em;*/
     min-height: 1.5em !important;
-    padding-left: 0.3em;
+    /*padding-left: 0.3em;*/
     margin-bottom: 0 !important;
     padding-bottom: 0;
 }
@@ -21,4 +21,14 @@
     margin-bottom: 0;
     padding-left: 0.3em !important;
     padding-right: 0.1em !important;
+}
+
+.ugene-tab-pane-tab {
+    border: none;
+    padding: 0 !important;
+    height: 100%;
+}
+
+.ugene-tab-tab-pane {
+
 }

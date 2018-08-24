@@ -10,6 +10,9 @@ export const SignIn = "SIGN_IN";
 export const SignUp = "SIGN_UP";
 export const SignOut = "SIGN_OUT";
 
+/* Menu actions */
+export const LeftSideBar = "LEFT_SIDE_BAR";
+
 /* Window types */
 export const UgeneWindowStartUp = "UgeneWindowStartUp";
 export const UgeneWindowWorkflow = "UgeneWindowWorkflow";
