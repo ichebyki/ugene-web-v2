@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Header, Icon, Image, Menu, Segment, Sidebar, Dropdown, Accordion, Label, Input } from 'semantic-ui-react';
 
+import LeftMenu from "./SideBarMenu";
 import "../App.css";
 
 export default class LeftSideBar extends Component {
@@ -44,10 +45,10 @@ export default class LeftSideBar extends Component {
         return (
             <div className={className}>
                 <Sidebar.Pushable className={className + "-pushable"}
-                                  as={Menu}>
+                                  as={Segment}>
                     <Sidebar
-                        className={className + "-sidebar"}
                         as={Menu}
+                        className={className + "-sidebar"}
                         animation='overlay'
                         direction='left'
                         vertical
@@ -55,50 +56,7 @@ export default class LeftSideBar extends Component {
                         visible={stateVisible}
                         onHide={this.handleSidebarHide.bind(this)}
                     >
-                        <Menu.Item as='a' header>
-                            File Permissions
-                        </Menu.Item>
-                        <Menu.Item as='a' name={'File'}     onClick={this.props.menuClick} >
-                            <Dropdown text='File'>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item text='New' />
-                                    <Dropdown.Item text='Open...' description='ctrl + o' />
-                                    <Dropdown.Item text='Save as...' description='ctrl + s' />
-                                    <Dropdown.Item text='Rename' description='ctrl + r' />
-                                    <Dropdown.Item text='Make a copy' />
-                                    <Dropdown.Item icon='folder' text='Move to folder' />
-                                    <Dropdown.Item icon='trash' text='Move to trash' />
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item text='Download As...' />
-                                    <Dropdown.Item text='Publish To Web' />
-                                    <Dropdown.Item text='E-mail Collaborators' />
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Menu.Item>
-                        <Menu.Item as='a' name={'Actions'}  onClick={this.props.menuClick} >
-                            <Menu vertical>
-                                <Menu.Item name='inbox' onClick={this.handleItemClick}>
-                                    <Label color='teal'>1</Label>
-                                    Inbox
-                                </Menu.Item>
-
-                                <Menu.Item name='spam' onClick={this.handleItemClick}>
-                                    <Label>51</Label>
-                                    Spam
-                                </Menu.Item>
-
-                                <Menu.Item name='updates' onClick={this.handleItemClick}>
-                                    <Label>1</Label>
-                                    Updates
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Input icon='search' placeholder='Search mail...' />
-                                </Menu.Item>
-                            </Menu>
-                        </Menu.Item>
-                        <Menu.Item as='a' name={'Settings'} onClick={this.props.menuClick} >Settings</Menu.Item>
-                        <Menu.Item as='a' name={'Tools'}    onClick={this.props.menuClick} >Tools   </Menu.Item>
-                        <Menu.Item as='a' name={'Window'}   onClick={this.props.menuClick} >Window  </Menu.Item>
+                        <LeftMenu />
                     </Sidebar>
 
                     <Sidebar.Pusher className={className + "-pusher"}>
