@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Icon, Image, Menu, Segment, Sidebar, Dropdown, Accordion, Label, Input } from 'semantic-ui-react';
+import { Menu, Segment, Sidebar } from 'semantic-ui-react';
 
-import LeftMenu from "./SideBarMenu";
-import "../App.css";
+import SideBarMenu from "./SideBarMenu";
 
 export default class LeftSideBar extends Component {
 
@@ -29,6 +28,12 @@ export default class LeftSideBar extends Component {
         this.props.hideMenu();
     };
 
+    onClickMenu = (e, props) => {
+        this.setState({ visible: false });
+        this.props.hideMenu();
+        this.props.menuClick(e, props);
+    };
+
     render() {
         const {
             className,
@@ -52,11 +57,10 @@ export default class LeftSideBar extends Component {
                         animation='overlay'
                         direction='left'
                         vertical
-                        inverted
                         visible={stateVisible}
                         onHide={this.handleSidebarHide.bind(this)}
                     >
-                        <LeftMenu />
+                        <SideBarMenu kind={'left'} onClickMenu={this.onClickMenu} />
                     </Sidebar>
 
                     <Sidebar.Pusher className={className + "-pusher"}>

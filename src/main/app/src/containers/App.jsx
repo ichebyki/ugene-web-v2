@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 
 import { Container } from "semantic-ui-react";
 
-import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, LeftSideBar } from '../constants/ActionTypes';
+import { LeftSideBar } from '../constants/ActionTypes';
 import * as ugeneActionsGlobal from '../actions/ActionsGlobal';
 import * as ugeneActionsTabs from '../actions/ActionsTabs';
 
 import UgeneTabPane from './ugene/TabPane';
 import MenuBar from './ugene/MenuBar';
 import UgeneModal from './ugene/Modals';
-import UgeneLeftSideBar from "./ugene/LeftSideBar";
+import UgeneSideBar from "./ugene/SideBar";
 import { logout } from '../data/modules/auth';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -57,8 +57,6 @@ class App extends Component {
 
 
     handleMenuBarClick = (name) => {
-        const signedIn = this.props.appState.auth.signedIn;
-
         switch (name) {
             case "About":
                 this.props.actions.showAbout();
@@ -75,21 +73,25 @@ class App extends Component {
                 this.props.actions.logout();
                 break;
             case "SideBar":
-                //this.props.actions.showLeftSideBar();
                 this.setState({leftSideBarIsVisible: !this.state.leftSideBarIsVisible});
                 break;
             default:
+                console.log("handleMenuBarClick: name=" + name);
                 break;
         }
     };
 
-    handleLeftMenuClick(e, { name }) {
-        console.log("handleLeftMenuClick - " + name);
+    handleLeftMenuClick(e, { name, action }) {
+        if (action && this["props"]["actions"][action]) {
+            this["props"]["actions"][action]();
+        }
+        else {
+            console.log('handleLeftMenuClick: action=undefined, name=' + name);
+        }
         this.setState({leftSideBarIsVisible: false});
     }
 
     handleHideLeftMenu() {
-        console.log("handleHideLeftMenu");
         this.setState({leftSideBarIsVisible: false});
     }
 
@@ -108,19 +110,21 @@ class App extends Component {
                          signedIn={this.props.appState.auth.signedIn}
                          userName={this.props.appState.auth.username}
                          menuClick={this.handleMenuBarClick.bind(this)} />
-                <UgeneLeftSideBar className="ugene-app-left-side-bar"
-                                  signedIn={this.props.appState.auth.signedIn}
-                                  userName={this.props.appState.auth.username}
-                                  visible={this.state.leftSideBarIsVisible}
-                                  menuClick={this.handleLeftMenuClick.bind(this)}
-                                  hideMenu={this.handleHideLeftMenu.bind(this)}>
+                <UgeneSideBar className="ugene-app-left-side-bar"
+                              kind={'left'}
+                              signedIn={this.props.appState.auth.signedIn}
+                              userName={this.props.appState.auth.username}
+                              visible={this.state.leftSideBarIsVisible}
+                              menuClick={this.handleLeftMenuClick.bind(this)}
+                              hideMenu={this.handleHideLeftMenu.bind(this)}>
                     <Container className="ugene-app-content-container"
                                fluid >
                         <UgeneTabPane className="ugene-app-tab-pane"
                                       actions={this.props.actions}
-                                      renderActiveOnly tabs={tabs} />
+                                      renderActiveOnly
+                                      tabs={tabs} />
                     </Container>
-                </UgeneLeftSideBar>
+                </UgeneSideBar>
             </div>
         );
     }

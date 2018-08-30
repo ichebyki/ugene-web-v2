@@ -10,7 +10,7 @@ import './App.css';
 import DevTools from "../utils/DevTools";
 
 
-export default class Root extends Component {
+class Root extends Component {
     render() {
         const { store, persistor, history } = this.props;
         const needDevTools = ! (process.env.NODE_ENV === 'production' || typeof window.devToolsExtension === "function");
@@ -31,3 +31,5 @@ export default class Root extends Component {
         );
     }
 }
+
+export default Root;

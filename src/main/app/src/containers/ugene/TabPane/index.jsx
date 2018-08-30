@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import * as actions from '../../../constants/ActionTypes';
 import TabPane from './TabPane';
 
 
@@ -20,7 +19,8 @@ export default class UgeneTabPane extends Component {
                 name: 'Home',
                 type: 'HOME',
                 desc: 'This is a pane "Home"',
-                pane: 'default'
+                pane: 'default',
+                content: 'This is a content of the pane "Home"'
             }],
             ...otherProps
         } = this.props;
@@ -34,12 +34,13 @@ export default class UgeneTabPane extends Component {
                 };
                 const content = {
                     key: tab.key,
-                    content: tab.desc
+                    content: tab.content
                 };
 
                 return {
                     menuItem: menuItem,
-                    content: content
+                    content: content,
+                    type: tab.type
                 };
             });
 

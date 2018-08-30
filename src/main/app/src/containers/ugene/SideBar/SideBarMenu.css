@@ -1,0 +1,103 @@
+:root {
+    --ugene-side-bar-background-color: #efefef;
+    --ugene-side-bar-text-color: black;
+}
+
+/*h1, p {
+    font-family: Lato;
+}*/
+
+.indent {
+    margin-left: 1em;
+    color: inherit !important;
+}
+
+.no-padding {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.label,
+.label * {
+    color: inherit;
+}
+
+.ugene-side-bar-accordion-menu {
+    border: none !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    min-height: 1em !important;
+    background-color: var(--ugene-side-bar-background-color) !important;
+    color: var(--ugene-side-bar-text-color) !important;
+}
+.ugene-side-bar-accordion-menu .divider {
+    margin-top: 0.3em !important;
+    margin-bottom: 0 !important;
+}
+.ugene-app-left-side-bar-pusher {
+    width: 100%;
+}
+
+.ugene-app-left-side-bar-segment {
+    width: 100%;
+    padding: 0 !important;
+}
+
+.ugene-app-left-side-bar-pushable {
+    border: 0;
+}
+
+.ugene-app-left-side-bar {
+    padding: 0 !important;
+    border: none;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 2em; /* THE SAME AS .ugene-app-menu-bar HEIGH */
+    position: absolute;
+}
+
+.ugene-app-left-side-bar-pusher,
+.ugene-app-left-side-bar-pushable,
+.ugene-app-left-side-bar-segment {
+    border: none;
+    padding: 0 !important;
+    height: 100%;
+}
+
+.ugene-app-left-side-bar-sidebar {
+    background-color: var(--ugene-side-bar-background-color) !important;
+    color: var(--ugene-side-bar-text-color) !important;
+}
+
+.ugene-app-left-side-bar-sidebar .item {
+    /* height: 2em !important; */
+    min-height: 1.5em !important;
+    padding: 0.6em!important;
+    min-width: 10em !important;
+    /* width: 1em !important; */
+    background-color: var(--ugene-side-bar-background-color) !important;
+    color: var(--ugene-side-bar-text-color) !important;
+}
+
+.ugene-side-bar-accordion-menu-item-accordion-title {
+    background-color: var(--ugene-side-bar-background-color) !important;
+    color: var(--ugene-side-bar-text-color) !important;
+}
+
+.ugene-side-bar-accordion-menu-item {
+    background-color: var(--ugene-side-bar-background-color) !important;
+    color: var(--ugene-side-bar-text-color) !important;
+}
+
+.ugene-side-bar-accordion-menu-item:hover {
+    background-color: lightgray !important;
+}
+
+
+.ugene-border {
+    margin-left: 1em !important;
+    box-shadow: 0px 0px 1px #000000 !important;
+    min-height: calc(2em * 4) !important;
+}

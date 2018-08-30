@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Tab as SemanticTab, Menu, Icon, Label } from 'semantic-ui-react';
 
 import "./TabPane.css";
@@ -16,7 +15,7 @@ class UgeneTabPane extends Component {
     constructor(props) {
         super(props);
 
-        const {tabs = [{name : null}]} = props;
+        const {tabs = [{name : "tab name"}]} = props;
         const firstTab = tabs[0];
 
         this.state = {
@@ -25,24 +24,35 @@ class UgeneTabPane extends Component {
     }
 
     render() {
-        const {renderActiveOnly, tabs = [{menuitem : "New tab", content: ""}], ...otherProps} = this.props;
-        const {currentTab} = this.state;
-        const onClickX = (e, k) => {
+        const {renderActiveOnly, tabs = [{menuitem : "New tab", content: "", type: ""}]} = this.props;
+        const onClickX = (e, k, t) => {
             e.preventDefault();
-            this.props.deleteTab(k);
+            if (t === "WORKFLOW") {
+                this.props.actions.closeWorkflow(k, t);
+            }
+            else {
+                this.props.actions.closeTab(k, t);
+            }
         };
 
         const panes = tabs.map(tab => {
             const menuItem = tab.menuItem;
+            const tabtype = tab.type;
             const content = tab.content.content;
             const borders = {borderBottom: 'none', borderRight: 'none', borderLeft: 'none'};
-            const menuItemStyle = {paddingLeft: '0.3em', paddingRight: '0.1em'};
             const xStyle = {backgroundColor: 'transparent', color: 'red', border: 'none', paddingLeft: 0};
 
             return {
                 menuItem: (
                     <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'} >
-                        <Icon name={menuItem.icon} />{menuItem.content}<Label style={xStyle} basic onClick={(e) => onClickX(e,menuItem.key)} ><sup>X</sup></Label>
+                        <Icon name={menuItem.icon} />
+                        {menuItem.content}
+                        <Label style={xStyle}
+                               basic
+                               onClick={(e) => onClickX.bind(this)(e, menuItem.key, tabtype)}
+                        >
+                            <sup>X</sup>
+                        </Label>
                     </Menu.Item>
                 ),
                 render: () =>

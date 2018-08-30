@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { purgeStoredState } from 'redux-persist'
 
-import { List, Menu, Message, Icon, Dropdown } from 'semantic-ui-react'
+import { Menu, Icon, Dropdown } from 'semantic-ui-react'
 
 class MenuBar extends Component {
 
@@ -94,14 +91,5 @@ class MenuBar extends Component {
         )
     }
 }
-
-/*const mapStateToProps = state => ({
-    appState: state
-});
-
-export default connect(
-    mapStateToProps,
-    { logout }
-) (MenuBar);*/
 
 export default MenuBar;

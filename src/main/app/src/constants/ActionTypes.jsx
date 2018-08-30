@@ -23,7 +23,7 @@ export const UgeneWindowAction = "UgeneWindowAction";
 export const UgeneWorkflowAction = "UgeneWorkflowAction";
 export const UgeneWorkflowElementAction = "UgeneWorkflowElementAction";
 
-/* actions' sub-types */
+/* UgeneWindowAction's sub-types */
 
 export const UgeneProject = {
     CREATE     : 'CREATE',

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import {Button, Container, Header, Image, Input, List, Message, Modal} from 'semantic-ui-react';
+import {Button, Container, Input, List, Message, Modal} from 'semantic-ui-react';
 import { Form } from 'semantic-ui-react';
 
-import { authenticated, login, logout } from '../../../data/modules/auth';
+import { login, logout } from '../../../data/modules/auth';
 
 
 class ModalSignIn extends Component {
@@ -92,22 +92,20 @@ class ModalSignIn extends Component {
 
     authCurrentMessage() {
         const { authState } = this.props;
-        const roleList = authState.roles.join();
-        const roleListDiv = !authState.signedIn ? <div>Current roles: {roleList}</div> : '';
 
-        if (this.props.authState.authFailure) {
+        if (authState.authFailure) {
             return this.authFailedMessage();
-        } else if (this.props.authState.signedIn) {
+        } else if (authState.signedIn) {
             return this.authSucceededMessage();
         } else {
-            const assignedRoles = this.props.authState.roles.map(item => {
+            const assignedRoles = authState.roles.map(item => {
                 return <List.Item key={"'" + item + "'"}>{item}</List.Item>
             });
 
             return (
                 <div>
                     <Message positive compact>
-                        <div>Signed in as: {this.props.authState.username}</div>
+                        <div>Signed in as: {authState.username}</div>
                         <List>
                             <List.Header>Assigned Roles</List.Header>
                             {assignedRoles}

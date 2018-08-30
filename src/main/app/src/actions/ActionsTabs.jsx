@@ -1,13 +1,30 @@
 import * as actions from '../constants/ActionTypes';
 
-export const createTab = () => ({
+export const openStartUp = () => ({
     type: actions.UgeneWindowAction,
-    command: actions.UgeneWindow.CREATE/*,
-    subType: actions.UgeneWindowStartUp*/
+    subType: actions.UgeneWindowStartUp,
+    command: actions.UgeneWindow.CREATE
 });
 
-export const deleteTab = (tabKey) => ({
+export const createTab = () => ({
+    type: actions.UgeneWindowAction,
+    command: actions.UgeneWindow.CREATE
+});
+
+export const closeTab = (tabKey) => ({
     type: actions.UgeneWindowAction,
     command: actions.UgeneWindow.DELETE,
+    tabkey: tabKey
+});
+
+export const createWorkflow = () => ({
+    type: actions.UgeneWorkflowAction,
+    subType: actions.UgeneWindowWorkflow,
+    command: actions.UgeneWorkflow.CREATE
+});
+
+export const closeWorkflow = (tabKey) => ({
+    type: actions.UgeneWorkflowAction,
+    command: actions.UgeneWorkflow.DELETE,
     tabkey: tabKey
 });

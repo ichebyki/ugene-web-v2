@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { About, Help, SignIn, SignUp, SignOut } from '../../../constants/ActionTypes';
+import { About, Help, SignIn } from '../../../constants/ActionTypes';
 import ModalAbout from './ModalAbout';
 import ModalHelp from './ModalHelp';
 import ModalSignIn from './ModalSignIn';
@@ -30,6 +30,8 @@ export default class UgeneModal extends Component {
                 return (
                     <ModalSignIn open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
+            default:
+                break;
         }
         return null;
     }
