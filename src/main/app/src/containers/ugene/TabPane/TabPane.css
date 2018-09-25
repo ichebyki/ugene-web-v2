@@ -30,5 +30,6 @@
 }
 
 .ugene-tab-tab-pane {
-
+    height: calc(100% - 2em - 5px) !important;
+    padding: 0 !important;
 }

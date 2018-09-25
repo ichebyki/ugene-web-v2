@@ -27,7 +27,11 @@ export default function ReducerTabs(state = initialState, action) {
                 type: 'WINDOW',
                 desc: 'This is a content of the "Tab ' + tabkey + '"',
                 pane: 'WINDOW',
-                content: 'This is a content of the pane "WINDOW"'
+                content: JSON.stringify({
+                    type: 'div',
+                    props: [],
+                    content: 'This is a content of the pane "WINDOW"'
+                })
             };
 
             if (state.tabs) {
@@ -74,7 +78,11 @@ export default function ReducerTabs(state = initialState, action) {
                 type: 'WORKFLOW',
                 desc: 'This is a content of the "Workflow ' + workflowkey + '"',
                 pane: 'WORKFLOW',
-                content: 'This is a content of the pane "Workflow "' + workflowkey
+                content: JSON.stringify({
+                    type: "UgeneWorkflow",
+                    props: {},
+                    children: []
+                })
             };
 
             if (state.tabs) {

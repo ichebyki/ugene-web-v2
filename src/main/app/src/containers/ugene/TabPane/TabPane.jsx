@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import { Tab as SemanticTab, Menu, Icon, Label } from 'semantic-ui-react';
 
+import * as UgeneComponent from "../UgeneComponent"
 import "./TabPane.css";
 
 class UgeneTabPane extends Component {
@@ -38,7 +39,7 @@ class UgeneTabPane extends Component {
         const panes = tabs.map(tab => {
             const menuItem = tab.menuItem;
             const tabtype = tab.type;
-            const content = tab.content.content;
+            const content = UgeneComponent.ParseContent(tab.content.content);
             const borders = {borderBottom: 'none', borderRight: 'none', borderLeft: 'none'};
             const xStyle = {backgroundColor: 'transparent', color: 'red', border: 'none', paddingLeft: 0};
 

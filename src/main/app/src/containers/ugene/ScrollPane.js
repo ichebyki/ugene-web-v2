@@ -5,16 +5,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 class UgeneScrollPane extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-    }
-
-    componentWillUnmount() {
-    }
-
     render() {
         // Filter out extra props that are specific to this HOC and shouldn't be
         // passed through
