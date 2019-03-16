@@ -75,6 +75,13 @@ class App extends Component {
             case "SideBar":
                 this.setState({leftSideBarIsVisible: !this.state.leftSideBarIsVisible});
                 break;
+            case "Your Profile":
+                this.props.actions.profile();
+                break;
+            case "Settings":
+                console.log("handleMenuBarClick: name=" + name);
+                this.setState({leftSideBarIsVisible: !this.state.leftSideBarIsVisible});
+                break;
             default:
                 console.log("handleMenuBarClick: name=" + name);
                 break;

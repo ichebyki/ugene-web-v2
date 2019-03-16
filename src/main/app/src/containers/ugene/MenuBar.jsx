@@ -41,7 +41,7 @@ class MenuBar extends Component {
             const trigger = (<span><Icon name='user' /> Hello, {username}</span>);
 
             const options = [
-                { key: 'profile',  text: 'Profile',  name: 'Your Profile', className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) },
+                { key: 'profile',  text: 'Your Profile',  name: 'Your Profile', className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) },
                 { key: 'settings', text: 'Settings', name: 'Settings',     className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) },
                 { key: 'sign-out', text: 'Sign Out', name: 'Sign Out',     className: 'ugene-dropdown-item', onClick: this.handleItemClick.bind(this) }
             ];

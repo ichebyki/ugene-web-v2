@@ -1,4 +1,4 @@
-import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, LeftSideBar } from '../constants/ActionTypes';
+import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, Profile, LeftSideBar } from '../constants/ActionTypes';
 
 /*export function clearActiveMenuBarItem() {
     return {
@@ -13,5 +13,6 @@ export const showHelp = () => ({ type: Help,    activeMenuBarItem: "showHelp",  
 export const signIn = () => ({ type: SignIn,    activeMenuBarItem: "signIn",    text: "Please Sign in" });
 export const signOut = () => ({ type: SignOut,  activeMenuBarItem: "signOut",   text: "You can sign out" });
 export const signUp = () => ({ type: SignUp,    activeMenuBarItem: "signUp",    text: "Please register before sign in" });
+export const profile = () => ({ type: Profile,  activeMenuBarItem: "profile",    text: "Edit profile" });
 
 export const showLeftSideBar = () => ({ type: LeftSideBar });

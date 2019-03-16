@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { About, Help, SignIn } from '../../../constants/ActionTypes';
+import { About, Help, SignIn, Profile } from '../../../constants/ActionTypes';
 import ModalAbout from './ModalAbout';
 import ModalHelp from './ModalHelp';
 import ModalSignIn from './ModalSignIn';
+import ModalProfile from './ModalProfile';
 
 export default class UgeneModal extends Component {
 
@@ -29,6 +30,10 @@ export default class UgeneModal extends Component {
             case SignIn:
                 return (
                     <ModalSignIn open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                );
+            case Profile:
+                return (
+                    <ModalProfile open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             default:
                 break;
