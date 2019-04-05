@@ -36,6 +36,10 @@ public class AuthenticationRestController {
     @Qualifier("jwtUserDetailsService")
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    @Qualifier("jwtUserSettingsService")
+    private JwtUserSettingsService userSettingsService;
+
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
@@ -115,4 +119,13 @@ public class AuthenticationRestController {
             throw new AuthenticationException("Incorrect Credentials", e);
         }
     }
+
+    @RequestMapping(value = "${jwt.route.authentication.settings.get}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSettings(HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        JwtSettings settings = (JwtUser) userSettingsService.loadSettinhsByUsername(username);
+        return ResponseEntity.ok(settings);
+    }
+
 }

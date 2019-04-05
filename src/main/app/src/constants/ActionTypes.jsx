@@ -10,6 +10,7 @@ export const SignIn = "SIGN_IN";
 export const SignUp = "SIGN_UP";
 export const SignOut = "SIGN_OUT";
 export const Profile = "PROFILE";
+export const Settings = "SETTINGS";
 
 /* Menu actions */
 export const LeftSideBar = "LEFT_SIDE_BAR";

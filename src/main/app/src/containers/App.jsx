@@ -56,6 +56,10 @@ class App extends Component {
 
 
 
+    /*
+       Need changes in
+       src/main/app/src/actions/ActionsGlobal.jsx
+    */
     handleMenuBarClick = (name) => {
         switch (name) {
             case "About":
@@ -79,8 +83,7 @@ class App extends Component {
                 this.props.actions.profile();
                 break;
             case "Settings":
-                console.log("handleMenuBarClick: name=" + name);
-                this.setState({leftSideBarIsVisible: !this.state.leftSideBarIsVisible});
+                this.props.actions.settings();
                 break;
             default:
                 console.log("handleMenuBarClick: name=" + name);

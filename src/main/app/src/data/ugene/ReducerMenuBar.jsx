@@ -1,4 +1,4 @@
-import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, Profile, LeftSideBar } from '../../constants/ActionTypes';
+import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, Profile, Settings, LeftSideBar } from '../../constants/ActionTypes';
 
 const initialState = {
 }
@@ -12,6 +12,7 @@ export default function ReducerMenuBar(state = initialState, action) {
         case SignOut:
         case SignUp:
         case Profile:
+        case Settings:
             return { ...state, activeMenuBarItem: action.type };
 
         case LeftSideBar:
