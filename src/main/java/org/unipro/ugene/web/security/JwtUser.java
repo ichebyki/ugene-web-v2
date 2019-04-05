@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -43,6 +44,8 @@ public class JwtUser implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+
 
 
 

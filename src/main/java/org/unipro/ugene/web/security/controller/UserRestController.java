@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.unipro.ugene.web.security.service.JwtUserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +24,7 @@ public class UserRestController {
 
     @Autowired
     @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
+    private JwtUserDetailsService userDetailsService;
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {

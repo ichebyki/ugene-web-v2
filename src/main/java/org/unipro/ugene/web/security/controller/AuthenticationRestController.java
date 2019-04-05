@@ -1,8 +1,6 @@
 package org.unipro.ugene.web.security.controller;
 
-import org.unipro.ugene.web.security.JwtAuthenticationRequest;
-import org.unipro.ugene.web.security.JwtTokenUtil;
-import org.unipro.ugene.web.security.JwtUser;
+import org.unipro.ugene.web.security.*;
 import org.unipro.ugene.web.security.service.JwtAuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.unipro.ugene.web.security.service.JwtUserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
@@ -35,7 +34,7 @@ public class AuthenticationRestController {
 
     @Autowired
     @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
+    private JwtUserDetailsService userDetailsService;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
@@ -62,6 +61,37 @@ public class AuthenticationRestController {
             return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
         } else {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(value = "${jwt.route.authentication.profile.get}", method = RequestMethod.GET)
+    public ResponseEntity<?> getProfile(HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
+        return ResponseEntity.ok(user);
+    }
+
+    @RequestMapping(value = "${jwt.route.authentication.profile.put}",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> updateProfile(HttpServletRequest httpServletRequest,
+                                           @RequestBody JwtProfileRequest request) {
+        String token0 = httpServletRequest.getHeader(tokenHeader).substring(7);
+
+        // Reload password post-security so we can generate the token
+        if (request.getUsername() != null) {
+            final UserDetails userNew = userDetailsService.updateUser(request.getUsername(),
+                    request.getFirstname(), request.getLastname(), request.getEmail());
+
+            final String token = jwtTokenUtil.generateToken(userNew);
+
+            // Return the token
+            return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        }
+        else {
+            // Return the token
+            return ResponseEntity.ok(new JwtAuthenticationResponse(token0));
         }
     }
 

@@ -25,4 +25,28 @@ public class JwtUserDetailsService implements UserDetailsService {
             return JwtUserFactory.create(user);
         }
     }
+
+    public UserDetails updateUser(String username,
+                                  String firstname,
+                                  String lastname,
+                                  String email) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+        } else {
+            if (firstname != null) {
+                user.setFirstname(firstname);
+            }
+            if (lastname != null) {
+                user.setLastname(lastname);
+            }
+            if (email != null) {
+                user.setEmail(email);
+            }
+            userRepository.saveAndFlush(user);
+            return JwtUserFactory.create(user);
+        }
+    }
+
 }
