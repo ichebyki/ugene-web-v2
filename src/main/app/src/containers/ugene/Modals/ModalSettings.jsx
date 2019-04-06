@@ -145,11 +145,21 @@ class ModalSettings extends Component {
                             return item;
                         });
                         let readOnly = 'false';
-                        if (key == 'username') {
-                            readOnly = 'true';
+
+                        if (key === 'username' || key === 'id') {
+                            return <Input key={key}
+                                       name={key}
+                                       id={key}
+                                       placeholder={key}
+                                       value={s[key]}
+                                       ref={key}
+                                       onChange={handleChange}
+                                       readOnly={'true'}
+                                       type={'hidden'}
+                                />
                         }
                         return <Form.Field key={key} inline>
-                            <Label htmlFor={key} width={6}>{key}</Label>
+                            <Label htmlFor={key} width={10}>{key}</Label>
                             <Input type={key}
                                    name={key}
                                    id={key}
@@ -163,8 +173,20 @@ class ModalSettings extends Component {
                     }
                 }
                 else {
+                    if (key === 'username' || key === 'id') {
+                        return <Input key={key}
+                                   name={key}
+                                   id={key}
+                                   placeholder={key}
+                                   value={s[key]}
+                                   ref={key}
+                                   onChange={handleChange}
+                                   readOnly={'true'}
+                                   type={'hidden'}
+                            />
+                    }
                     return <Form.Field key={key} inline>
-                        <Label htmlFor={key} style={{ width: "6em", background: "transparent" }}>{key}</Label>
+                        <Label htmlFor={key} style={{width: "10em", background: "transparent"}}>{key}</Label>
                         <Input type={key}
                                name={key}
                                id={key}
@@ -191,31 +213,15 @@ class ModalSettings extends Component {
             const {userSettings} = this.state;
 
             let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
-            axios.post('/auth/profile/put',
+            axios.post('/auth/settings/put',
                 formData,
                 {headers: {authorization: headerToken}})
                 .then(
                     success => {
-                        let authorization = success.data.token;
-                        localStorage.setItem(Names.JWT_TOKEN, authorization);
-
-                        let token = jwt_decode(authorization);
-                        authenticated({
-                            signedIn: true,
-                            username: token.username,
-                            roles: token.roles,
-                            authFailure: false
-                        });
-
-                        //Trigger a call to a private route and the authorization token should get cached
-                        // $FlowFixMe Flow complaining about the localstorage being null
-                        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
-                        axios.get(`/api/validate/${token.sub}`, {
-                            headers: {authorization: headerToken}
-                        });
+                        const userSettings = success.data;
                     },
                     failure => {
-                        console.error(`Failed to put new profile values: ${failure}`)
+                        console.error(`Failed to put new settings values: ${failure}`)
                     }
                 );
         }
@@ -238,9 +244,6 @@ class ModalSettings extends Component {
                 <Modal.Header>Settings</Modal.Header>
                 <Modal.Content>
                     <Form onSubmit={this.handleUpdateSettings}>
-                        <Container>
-                            {this.settingsCurrentMessage()}
-                        </Container>
                         <Form.Field inline>
                             {this.getUserSettingsFields(userSettings)}
                         </Form.Field>

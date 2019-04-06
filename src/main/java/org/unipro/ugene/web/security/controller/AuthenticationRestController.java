@@ -1,5 +1,6 @@
 package org.unipro.ugene.web.security.controller;
 
+import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.security.*;
 import org.unipro.ugene.web.security.service.JwtAuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.unipro.ugene.web.security.service.JwtUserDetailsService;
+import org.unipro.ugene.web.service.UserSettingsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
@@ -37,8 +39,8 @@ public class AuthenticationRestController {
     private JwtUserDetailsService userDetailsService;
 
     @Autowired
-    @Qualifier("jwtUserSettingsService")
-    private JwtUserSettingsService userSettingsService;
+    @Qualifier("userSettingsService")
+    private UserSettingsService userSettingsService;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
@@ -120,12 +122,38 @@ public class AuthenticationRestController {
         }
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.settings.get}", method = RequestMethod.GET)
-    public ResponseEntity<?> getSettings(HttpServletRequest request) {
+    @RequestMapping(value = "${jwt.route.usersettings.get}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserSettings(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtSettings settings = (JwtUser) userSettingsService.loadSettinhsByUsername(username);
+
+        UserSettings settings = userSettingsService.getUserSettingsByUsername(username);
+        if (settings == null) {
+            settings = new UserSettings(username);
+            if (userSettingsService.addUserSettings(settings)) {
+                settings = userSettingsService.getUserSettingsByUsername(username);
+            }
+            else {
+                settings = null;
+            }
+        }
         return ResponseEntity.ok(settings);
+    }
+
+    @RequestMapping(value = "${jwt.route.usersettings.put}",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> updateUserSettings(HttpServletRequest httpServletRequest,
+                                                @RequestBody UserSettings request) {
+        String token = httpServletRequest.getHeader(tokenHeader).substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+
+        UserSettings userSettings = userSettingsService.updateUserSettings(request);
+        if (userSettings != null) {
+            return ResponseEntity.ok(userSettingsService.getUserSettingsByUsername(username));
+        }
+
+        return ResponseEntity.badRequest().body(null);
     }
 
 }
