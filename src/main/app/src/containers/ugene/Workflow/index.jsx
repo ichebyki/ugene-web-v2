@@ -20,7 +20,7 @@ class UgeneWorkflow extends React.Component {
                             diagram pane
                         </ScrollPane>
                         <ScrollPane>
-                            properies pane
+                            properties pane
                         </ScrollPane>
                     </SplitPane>
                 </SplitPane>

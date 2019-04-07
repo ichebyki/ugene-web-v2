@@ -285,8 +285,8 @@ class ModalProfile extends Component {
                         <Form.Field inline>
                             {this.getUserProfileFields(userProfile)}
                         </Form.Field>
-                        <Button disabled={!authState.signedIn} onClick={e => this.handleUpdateProfile(e)}>Update</Button>
-                        <Button disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
+                        <Button positive disabled={!authState.signedIn} onClick={e => this.handleUpdateProfile(e)}>Update</Button>
+                        <Button negative disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
                     </Form>
                 </Modal.Content>
             </Modal>

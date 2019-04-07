@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
-import {Button, Container, Form, Input, Label, List, Message, Modal} from 'semantic-ui-react';
+import {Button, Container, Form, Input, Label, List, Message, Modal, Popup} from 'semantic-ui-react';
 import {authenticated, authenticationFailure, login, logout} from '../../../data/modules/auth';
 import * as Names from "../../../constants/Names";
 import axios from "axios";
@@ -185,6 +185,7 @@ class ModalSettings extends Component {
                                    type={'hidden'}
                             />
                     }
+                    /* TODO: Tooltip */
                     return <Form.Field key={key} inline>
                         <Label htmlFor={key} style={{width: "10em", background: "transparent"}}>{key}</Label>
                         <Input type={key}
@@ -247,8 +248,8 @@ class ModalSettings extends Component {
                         <Form.Field inline>
                             {this.getUserSettingsFields(userSettings)}
                         </Form.Field>
-                        <Button disabled={!authState.signedIn} onClick={e => this.handleUpdateSettings(e)}>Update</Button>
-                        <Button disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
+                        <Button positive disabled={!authState.signedIn} onClick={e => this.handleUpdateSettings(e)}>Update</Button>
+                        <Button negative disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
                     </Form>
                 </Modal.Content>
             </Modal>

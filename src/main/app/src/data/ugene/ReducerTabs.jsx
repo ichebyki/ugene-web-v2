@@ -11,7 +11,11 @@ const initialState = {
         type: 'STARTPAGE',
         desc: 'This is a pane "Start Page"',
         pane: 'STARTPAGE',
-        content: 'This is a content of the pane "STARTPAGE"'
+        content: JSON.stringify({
+            type: "UgeneStartPage",
+            props: {},
+            children: []
+        })
     }]
 };
 

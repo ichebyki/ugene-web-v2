@@ -191,8 +191,8 @@ class ModalSignIn extends Component {
                                    onChange={this.handleChange}
                             />
                         </Form.Field>
-                        <Button disabled={authState.signedIn} onClick={e => this.handleSignIn(e)}>Login</Button>{' '}
-                        <Button disabled={!authState.signedIn} onClick={e => this.handleSignOut(e)}>Logout</Button>
+                        <Button positive disabled={authState.signedIn} onClick={e => this.handleSignIn(e)}>Login</Button>{' '}
+                        <Button negative disabled={!authState.signedIn} onClick={e => this.handleSignOut(e)}>Logout</Button>
                     </Form>
                 </Modal.Content>
             </Modal>

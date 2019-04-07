@@ -39,28 +39,49 @@ class UgeneTabPane extends Component {
         const panes = tabs.map(tab => {
             const menuItem = tab.menuItem;
             const tabtype = tab.type;
-            const content = UgeneComponent.ParseContent(tab.content.content);
+            const content = UgeneComponent.ParseContent(tab);
             const borders = {borderBottom: 'none', borderRight: 'none', borderLeft: 'none'};
             const xStyle = {backgroundColor: 'transparent', color: 'red', border: 'none', paddingLeft: 0};
 
-            return {
-                menuItem: (
-                    <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'} >
-                        <Icon name={menuItem.icon} />
-                        {menuItem.content}
-                        <Label style={xStyle}
-                               basic
-                               onClick={(e) => onClickX.bind(this)(e, menuItem.key, tabtype)}
-                        >
-                            <sup>X</sup>
-                        </Label>
-                    </Menu.Item>
-                ),
-                render: () =>
-                    <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
-                        {content}
-                    </SemanticTab.Pane>
-            };
+            if (tabtype === 'STARTPAGE') {
+                return {
+                    menuItem: (
+                        <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'}>
+                            <Icon name={menuItem.icon}/>
+                            {menuItem.content}
+                            <Label style={xStyle}
+                                   basic
+                            >
+                                <sup> </sup>
+                            </Label>
+                        </Menu.Item>
+                    ),
+                    render: () =>
+                        <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
+                            {content}
+                        </SemanticTab.Pane>
+                };
+            }
+            else {
+                return {
+                    menuItem: (
+                        <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'}>
+                            <Icon name={menuItem.icon}/>
+                            {menuItem.content}
+                            <Label style={xStyle}
+                                   basic
+                                   onClick={(e) => onClickX.bind(this)(e, menuItem.key, tabtype)}
+                            >
+                                <sup>X</sup>
+                            </Label>
+                        </Menu.Item>
+                    ),
+                    render: () =>
+                        <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
+                            {content}
+                        </SemanticTab.Pane>
+                };
+            }
         });
 
         return (
