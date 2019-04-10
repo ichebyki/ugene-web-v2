@@ -7,9 +7,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
-@Table(name = "settings")
+@Table(name = "app")
 @Data
 @NoArgsConstructor
 public class AppSettings {
@@ -31,14 +32,14 @@ public class AppSettings {
 
     @Column(name = "classPathList")
     @NotNull
-    private String classPathList;
+    private List<String> classPathList;
 
     @Column(name = "sourcePath")
     @NotNull
     private String sourcePath;
 
     @Column(name = "testPathList")
-    private String testPathList;
+    private List<String> testPathList;
 
     @Column(name = "monitoringPort")
     @NotNull

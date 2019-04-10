@@ -25,7 +25,9 @@ class UgeneTabPane extends Component {
     }
 
     render() {
-        const {renderActiveOnly, tabs = [{menuitem : "New tab", content: "", type: ""}]} = this.props;
+        // Filter out extra props that are specific to this HOC and shouldn't be
+        // passed through
+        const {renderActiveOnly, tabs = [{menuitem : "New tab", content: "", type: ""}], actions} = this.props;
         const onClickX = (e, k, t) => {
             e.preventDefault();
             if (t === "WORKFLOW") {
@@ -39,7 +41,7 @@ class UgeneTabPane extends Component {
         const panes = tabs.map(tab => {
             const menuItem = tab.menuItem;
             const tabtype = tab.type;
-            const content = UgeneComponent.ParseContent(tab);
+            const content = UgeneComponent.ParseContent(tab, actions);
             const borders = {borderBottom: 'none', borderRight: 'none', borderLeft: 'none'};
             const xStyle = {backgroundColor: 'transparent', color: 'red', border: 'none', paddingLeft: 0};
 
@@ -82,7 +84,7 @@ class UgeneTabPane extends Component {
                         </SemanticTab.Pane>
                 };
             }
-        });
+        }, actions);
 
         return (
             <div className={'ugene-tab-pane'}>

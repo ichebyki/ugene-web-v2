@@ -1,8 +1,20 @@
-import { _EMPTY_, About, Help, SignIn, SignUp, SignOut, Profile, Settings, LeftSideBar } from '../../constants/ActionTypes';
+import {
+    _EMPTY_,
+    About,
+    Help,
+    SignIn,
+    SignUp,
+    SignOut,
+    Profile,
+    Settings,
+    LeftSideBar,
+    AppsAdd
+} from '../../constants/ActionTypes';
 
 const initialState = {
 }
 
+/* COMMAND or MENUITEM: add here */
 export default function ReducerMenuBar(state = initialState, action) {
 
     switch (action.type) {
@@ -21,6 +33,10 @@ export default function ReducerMenuBar(state = initialState, action) {
 
         case _EMPTY_:
             return { ...state, activeMenuBarItem: action.type };
+
+            /* GENERAL COMMAND */
+        case AppsAdd:
+            return { ...state, activeMenuBarItem: AppsAdd};
 
         default:
             return state;

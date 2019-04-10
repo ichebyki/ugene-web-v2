@@ -3,7 +3,7 @@ import React from "react";
 import UgeneWorkflow from "./Workflow"
 import AppsList from "./AppsList";
 
-export const ParseContent = (o) => {
+export const ParseContent = (o, actions) => {
     let content = '';
     if (o && o.type) {
         if (o.type === 'STARTPAGE') {
@@ -19,9 +19,9 @@ export const ParseContent = (o) => {
             if (obj && obj.type) {
                 switch (obj.type) {
                     case "UgeneStartPage":
-                        return <AppsList {...obj.props} />
+                        return <AppsList actions={actions} {...obj.props} />
                     case "UgeneWorkflow":
-                        return <UgeneWorkflow {...obj.props} />
+                        return <UgeneWorkflow actions={actions} {...obj.props} />
                 }
             }
         }

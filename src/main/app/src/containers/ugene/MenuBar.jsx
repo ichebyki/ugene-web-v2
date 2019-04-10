@@ -21,8 +21,7 @@ class MenuBar extends Component {
             <Menu.Menu position='left'>
                 <Menu.Item as='a'
                            name={'SideBar'}
-                           onClick={this.handleItemClick.bind(this)}
-                >
+                           onClick={this.handleItemClick.bind(this)}>
                     <Icon name={'sidebar'} />
                 </Menu.Item>
             </Menu.Menu>

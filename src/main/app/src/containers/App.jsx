@@ -57,6 +57,7 @@ class App extends Component {
 
 
     /*
+       COMMAND and MENUITEM
        Need changes in
        src/main/app/src/actions/ActionsGlobal.jsx
     */
@@ -84,6 +85,9 @@ class App extends Component {
                 break;
             case "Settings":
                 this.props.actions.settings();
+                break;
+            case "AppsAdd":
+                this.props.actions.appsadd();
                 break;
             default:
                 console.log("handleMenuBarClick: name=" + name);
