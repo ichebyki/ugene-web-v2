@@ -15,28 +15,32 @@ const initialState = {
 }
 
 /* COMMAND or MENUITEM: add here */
-export default function ReducerMenuBar(state = initialState, action) {
+export default function ReducerCommands(state = initialState, action) {
 
     switch (action.type) {
+        /* MENUBAR */
         case About:
         case Help:
         case SignIn:
+
+        /* RIGHT MENU */
         case SignOut:
         case SignUp:
         case Profile:
         case Settings:
             return { ...state, activeMenuBarItem: action.type };
 
+        /* LEFT MENU */
         case LeftSideBar:
             return  { ...state,
                 activeMenuBarItem: state.activeMenuBarItem === LeftSideBar ? _EMPTY_  : LeftSideBar};
 
+        /* GENERAL COMMAND */
+        case AppsAdd:
+            return { ...state, activeMenuBarItem: AppsAdd, actionsEx: action['actionsEx']};
+
         case _EMPTY_:
             return { ...state, activeMenuBarItem: action.type };
-
-            /* GENERAL COMMAND */
-        case AppsAdd:
-            return { ...state, activeMenuBarItem: AppsAdd};
 
         default:
             return state;

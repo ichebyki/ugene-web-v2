@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
-import {Button, Container, Form, Input, Label, List, Message, Modal, Grid} from 'semantic-ui-react';
-import {authenticated, authenticationFailure, login, logout} from '../../../data/modules/auth';
+import {Button, Form, Input, List, Message, Modal, Grid, Header, Checkbox} from 'semantic-ui-react';
+import {login, logout} from '../../../data/modules/auth';
 import * as Names from "../../../constants/Names";
 import axios from "axios/index";
-import jwt_decode from "jwt-decode";
 
 
 
@@ -31,11 +30,13 @@ class ModalAppsAdd extends Component {
             name: "",
             standalone: false,
             sourcePath: "",
-            classPathList: [""],
-            testPathList: [""],
+            classPathList: ["1", "2"],
+            testPathList: ["3", "4"],
             monitoringPort: 0,
             httpMonitoringPort: 0,
-        }
+        },
+        classPathList: "",
+        testPathList: "",
     };
 
     constructor(props) {
@@ -44,6 +45,7 @@ class ModalAppsAdd extends Component {
     }
 
     componentDidMount() {
+        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
     }
 
     authFailedMessage() {
@@ -68,15 +70,12 @@ class ModalAppsAdd extends Component {
             });
 
             return (
-                <div>
-                    <Message positive compact>
-                        <List horizontal>
-                            <Label key={"Assigned Roles"}>Assigned Roles</Label>
-                            {assignedRoles}
-                        </List>
-                    </Message>
-                    <br />
-                </div>
+                <List horizontal>
+                    <List.Item><List.Header>Username:</List.Header></List.Item>
+                    <List.Item key={'username'}>{this.props.authState.username}</List.Item>
+                    <List.Item><List.Header>Assigned Roles:</List.Header></List.Item>
+                    {assignedRoles}
+                </List>
             )
         }
 
@@ -108,10 +107,6 @@ class ModalAppsAdd extends Component {
 
     }
 
-    handleChange = (e, { name, value }) => {
-        this.setState({ [name]: value });
-    };
-
     handleClose = (e) => {
         e.preventDefault();
         this.closeModal();
@@ -122,55 +117,89 @@ class ModalAppsAdd extends Component {
         if (this.props.onclose) {
             this.props.onclose();
         }
+        if (this.props.appState.ugeneCommandState
+            && this.props.appState.ugeneCommandState.actionsEx
+            && this.props.appState.ugeneCommandState.actionsEx.onClose)
+        {
+            this.props.appState.ugeneCommandState.actionsEx.onClose();
+        }
     };
 
     handleAddApp(e) {
         e.preventDefault();
 
-        const formData = {};
-        for (const field in this.refs) {
-            formData[field] = this.refs[field].props.value;
-        }
-
-        if (formData) {
-            const {userProfile} = this.state;
-
+        const { appsAddSettings } = this.state;
+        if (this.props.authState.signedIn && appsAddSettings) {
             let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
-            axios.post('/auth/profile/put',
-                formData,
+
+            appsAddSettings['username'] = this.props.authState.username;
+            appsAddSettings['id'] = null;
+
+            axios.post('/auth/apps/put',
+                appsAddSettings,
                 {headers: {authorization: headerToken}})
                 .then(
                     success => {
-                        let authorization = success.data.token;
-                        localStorage.setItem(Names.JWT_TOKEN, authorization);
-
-                        let token = jwt_decode(authorization);
-                        authenticated({
-                            signedIn: true,
-                            username: token.username,
-                            roles: token.roles,
-                            authFailure: false
-                        });
-
-                        //Trigger a call to a private route and the authorization token should get cached
-                        // $FlowFixMe Flow complaining about the localstorage being null
-                        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
-                        axios.get(`/api/validate/${token.sub}`, {
-                            headers: {authorization: headerToken}
-                        });
+                        let settings = success.data;
+                        this.setState({appsAddSettings: settings});
                     },
                     failure => {
-                        console.error(`Failed to put new profile values: ${failure}`)
+                        console.error(`Failed to add new application values: ${failure}`)
                     }
                 );
         }
     };
 
+    handleChange(e, o, key) {
+        let { appsAddSettings } = this.state;
+        if (typeof o.value !== 'undefined') {
+            appsAddSettings[key] = o.value;
+        }
+        else if (typeof o.checked !== 'undefined') {
+            appsAddSettings[key] = o.checked;
+        }
+        this.setState( {appsAddSettings: appsAddSettings} );
+    }
+
+    handleAddItemList(e, o, key) {
+        let { appsAddSettings } = this.state;
+        let value = this.state[key];
+        if (appsAddSettings && appsAddSettings[key]) {
+            appsAddSettings[key].push(value);
+            this.setState( {appsAddSettings: appsAddSettings} );
+            this.setState( {[key]: ""} );
+        }
+    }
+
+    handleDeleteItemList(e, o, key) {
+        let { appsAddSettings } = this.state;
+        if (appsAddSettings && appsAddSettings[key]) {
+            appsAddSettings[key].splice(o.itemlistindex - 1, 1);
+            this.setState( {appsAddSettings: appsAddSettings} );
+        }
+    }
+
+    handleChangeItemList(e, o, key) {
+        let { appsAddSettings } = this.state;
+        if (o.itemlistindex && o.itemlistindex > 0) {
+            if (appsAddSettings && appsAddSettings[key]) {
+                appsAddSettings[key][o.itemlistindex - 1] = o.value;
+                this.setState( {appsAddSettings: appsAddSettings} );
+            }
+        }
+        else if (o.itemlistindex && o.itemlistindex == -1) {
+            this.setState( {[key]: o.value} );
+        }
+    }
+
     getAppFields(p) {
         if (p) {
             let s = p;
-            let handleChange = this.handleChange;
             let state = this.state;
+            this.handleChange.bind(this);
+            this.handleChangeItemList.bind(this);
+            this.handleDeleteItemList.bind(this);
+            this.handleAddItemList.bind(this);
 
             let rows =  Object.keys(s).map(function(key) {
                 let value = s[key];
@@ -178,65 +207,92 @@ class ModalAppsAdd extends Component {
                 if (value instanceof Array
                     || Object.prototype.toString.call(value) === '[object Array]'
                     || Array.isArray(value)) {
+                    let i = 0;
+
                     rows = value.map(item => {
-                        return <Grid.Row key={key + "-row"}>
-                            <Grid.Column width={4}>
-                                {key}
+                        i = i + 1;
+                        return <Grid.Row key={key + "-row-" + i} style={{padding: "0.3rem"}}>
+                            <Grid.Column width={4} textAlign='right'>
+                                {i == 1 ? key : ""}
                             </Grid.Column>
-                            <Grid.Column width={4}>
-                                <Input type={key + "-input"}
-                                       name={key + "-input"}
-                                       id={key + "-input"}
+                            <Grid.Column width={8}>
+                                <Input name={key + "-input-" + i}
+                                       id={key + "-input-" + i}
                                        placeholder={key}
                                        value={item}
-                                       ref={key + "-input"}
-                                       onChange={handleChange}/>
+                                       ref={key + "-input-" + i}
+                                       itemlistindex={i}
+                                       onChange={(e, o) => this.handleChangeItemList(e, o, key)}/>
                             </Grid.Column>
-                            <Grid.Column width={4}>
-                                <Button key={key + "-button"}>Delete</Button>
+                            <Grid.Column width={1}>
+                                <Button icon="ban" size='mini' circular
+                                        key={key + "-button-" + i}
+                                        itemlistindex={i}
+                                        onClick={(e, o) => this.handleDeleteItemList(e, o, key)}/>
                             </Grid.Column>
                         </Grid.Row>;
-                    });
+                    }, this);
 
-                    return <Grid.Row key={key + "-row"}>
-                        <Grid.Column width={4}>
-                            {key}
+                    return [rows, <Grid.Row key={key + "-row"} style={{padding: "0.3rem"}}>
+                        <Grid.Column width={4} textAlign='right'>
+                            {i == 0 ? key : ""}
                         </Grid.Column>
-                        <Grid.Column width={4}>
-                            <Input type={key + "-input"}
-                                   name={key + "-input"}
+                        <Grid.Column width={8}>
+                            <Input name={key + "-input"}
                                    id={key + "-input"}
                                    placeholder={key}
-                                   value={""}
+                                   value={state[key]}
                                    ref={key + "-input"}
-                                   onChange={handleChange}/>
+                                   itemlistindex={-1}
+                                   onChange={(e, o) => this.handleChangeItemList(e, o, key)}/>
                         </Grid.Column>
-                        <Grid.Column width={4}>
-                            <Button key={key + "-button"}>Add</Button>
+                        <Grid.Column width={1}>
+                            <Button icon='plus' size='mini' circular
+                                    key={key + "-button"}
+                                    itemlistindex={-1}
+                                    onClick={(e, o) => this.handleAddItemList(e, o, key)}/>
+                        </Grid.Column>
+                    </Grid.Row>];
+                }
+                else if (key === "standalone") {
+                    return <Grid.Row key={key + "-row"} style={{padding: "0.3rem"}}>
+                        <Grid.Column width={4} textAlign='right'>
+                            {key}
+                        </Grid.Column>
+                        <Grid.Column width={8}>
+                            <Checkbox name={key + "-checkbox"}
+                                   id={key + "-checkbox"}
+                                   placeholder={key}
+                                   checked={value}
+                                   ref={key + "-checkbox"}
+                                   onChange={(e, o) => this.handleChange(e, o, key)}/>
+                        </Grid.Column>
+                        <Grid.Column width={1}>
                         </Grid.Column>
                     </Grid.Row>;
                 }
                 else {
-                    return <Grid.Row key={key + "-row"}>
-                        <Grid.Column width={4}>
+                    return <Grid.Row key={key + "-row"} style={{padding: "0.3rem"}}>
+                        <Grid.Column width={4} textAlign='right'>
                             {key}
                         </Grid.Column>
-                        <Grid.Column width={4}>
-                            <Input type={key + "-input"}
-                                   name={key + "-input"}
+                        <Grid.Column width={8}>
+                            <Input name={key + "-input"}
                                    id={key + "-input"}
                                    placeholder={key}
                                    value={value}
                                    ref={key + "-input"}
-                                   onChange={handleChange}/>
+                                   onChange={(e, o) => this.handleChange(e, o, key)}/>
                         </Grid.Column>
-                        <Grid.Column width={4}>
+                        <Grid.Column width={1}>
                         </Grid.Column>
                     </Grid.Row>;
                 }
-            });
+            }, this);
 
-            return <Grid>{rows}</Grid>;
+            return <Grid verticalAlign='middle' >
+                {rows}
+            </Grid>;
         }
     };
 
@@ -246,7 +302,7 @@ class ModalAppsAdd extends Component {
         const { open, dimmer } = this.state;
 
         return (
-            <Modal size="large"
+            <Modal size={'small'}
                    dimmer={dimmer}
                    closeIcon={this.props.closeIcon}
                    open={open}
@@ -254,12 +310,15 @@ class ModalAppsAdd extends Component {
                    closeOnDocumentClick={false}
                    onClose={this.closeModal.bind(this)}
             >
-                <Modal.Header>Application settings</Modal.Header>
-                <Modal.Content>
-                    <Form onSubmit={this.handleAddApp}>
-                        <Container>
-                            {this.authCurrentMessage()}
-                        </Container>
+                <Modal.Header>
+                    <Header>
+                        Application settings
+                        <Header.Subheader>{this.authCurrentMessage()}</Header.Subheader>
+                    </Header>
+                </Modal.Header>
+
+                <Modal.Content >
+                    <Form onSubmit={this.handleAddApp} size={'mini'}>
                         <Form.Field>
                             {this.getAppFields(appsAddSettings)}
                         </Form.Field>

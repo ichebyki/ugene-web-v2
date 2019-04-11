@@ -7,7 +7,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "app")
@@ -16,30 +18,28 @@ import java.util.List;
 public class AppSettings {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    @Column(name = "uuid", unique = true)
+    @Column(name = "username", length = 50)
     @NotNull
-    private String uuid;
+    @Size(min = 4, max = 50)
+    private String username;
 
-    @Column(name = "name", length = 50, unique = true)
+    @Column(name = "name", length = 500, unique = true)
     @NotNull
     private String name;
 
     @Column(name = "classPathList")
     @NotNull
-    private List<String> classPathList;
+    private ArrayList<String> classPathList;
 
     @Column(name = "sourcePath")
     @NotNull
     private String sourcePath;
 
     @Column(name = "testPathList")
-    private List<String> testPathList;
+    private ArrayList<String> testPathList;
 
     @Column(name = "monitoringPort")
     @NotNull
@@ -51,16 +51,78 @@ public class AppSettings {
 
     @Column(name = "standalone")
     @NotNull
-    private int standalone;
+    private boolean standalone;
 
-    /*public AppSettings() {
-        this.name = "<app-name-" + id + ">";
-        this.classPathList = "";
-        this.sourcePath = "";
-        this.testPathList = "";
-        this.monitoringPort = 6300;
-        this.httpMonitoringPort = -1;
-        this.standalone = 0;
-    }*/
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<String> getClassPathList() {
+        return classPathList;
+    }
+
+    public void setClassPathList(ArrayList<String> classPathList) {
+        this.classPathList = classPathList;
+    }
+
+    public String getSourcePath() {
+        return sourcePath;
+    }
+
+    public void setSourcePath(String sourcePath) {
+        this.sourcePath = sourcePath;
+    }
+
+    public ArrayList<String> getTestPathList() {
+        return testPathList;
+    }
+
+    public void setTestPathList(ArrayList<String> testPathList) {
+        this.testPathList = testPathList;
+    }
+
+    public int getMonitoringPort() {
+        return monitoringPort;
+    }
+
+    public void setMonitoringPort(int monitoringPort) {
+        this.monitoringPort = monitoringPort;
+    }
+
+    public int getHttpMonitoringPort() {
+        return httpMonitoringPort;
+    }
+
+    public void setHttpMonitoringPort(int httpMonitoringPort) {
+        this.httpMonitoringPort = httpMonitoringPort;
+    }
+
+    public boolean isStandalone() {
+        return standalone;
+    }
+
+    public void setStandalone(boolean standalone) {
+        this.standalone = standalone;
+    }
 }
 

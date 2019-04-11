@@ -12,8 +12,8 @@ public class AppSettingsService {
     @Autowired
     private AppSettingsRepository appSettingsRepository;
 
-    public List<AppSettings> getAllAppSettings() {
-        return appSettingsRepository.findAll();
+    public List<AppSettings> getAllAppSettings(String username) {
+        return appSettingsRepository.findAllByUsername(username);
     }
 
     public boolean addAppSettings(AppSettings appSettings) {
@@ -22,8 +22,12 @@ public class AppSettingsService {
         return save != null;
     }
 
-    public AppSettings getAppSettingsByUuid(String uuid) {
-        return appSettingsRepository.findByUuid(uuid);
+    public AppSettings getAppSettingsById(String id) {
+        return appSettingsRepository.findById(id);
+    }
+
+    public AppSettings getAppSettingsByName(String name) {
+        return appSettingsRepository.findByName(name);
     }
 
     public AppSettings updateAppSettings(AppSettings settings) {

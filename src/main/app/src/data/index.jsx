@@ -6,7 +6,7 @@ import { routerReducer } from "react-router-redux";
 import auth from './modules/auth';
 import websockets from './modules/websockets';
 import books from './modules/books';
-import ugeneMenuBar from './ugene/ReducerMenuBar';
+import ugeneCommandState from './ugene/ReducerCommands';
 import ugeneTabs from './ugene/ReducerTabs';
 
 const appReducer = combineReducers({
@@ -14,7 +14,7 @@ const appReducer = combineReducers({
     auth,
     websockets,
     books,
-    ugeneMenuBar,
+    ugeneCommandState,
     ugeneTabs
 });
 

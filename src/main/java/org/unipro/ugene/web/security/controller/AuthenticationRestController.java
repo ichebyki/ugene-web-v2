@@ -1,5 +1,6 @@
 package org.unipro.ugene.web.security.controller;
 
+import org.unipro.ugene.web.model.AppSettings;
 import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.security.*;
 import org.unipro.ugene.web.security.service.JwtAuthenticationResponse;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.unipro.ugene.web.security.service.JwtUserDetailsService;
+import org.unipro.ugene.web.service.AppSettingsService;
 import org.unipro.ugene.web.service.UserSettingsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -122,7 +124,8 @@ public class AuthenticationRestController {
         }
     }
 
-    @RequestMapping(value = "${jwt.route.usersettings.get}", method = RequestMethod.GET)
+    @RequestMapping(value = "${jwt.route.usersettings.get}",
+            method = RequestMethod.GET)
     public ResponseEntity<?> getUserSettings(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);

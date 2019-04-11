@@ -33,8 +33,8 @@ class App extends Component {
     };
 
     componentDidMount() {
-        if (this.props.appState.ugeneMenuBar.activeMenuBarItem
-            && this.props.appState.ugeneMenuBar.activeMenuBarItem === LeftSideBar)
+        if (this.props.appState.ugeneCommandState.activeMenuBarItem
+            && this.props.appState.ugeneCommandState.activeMenuBarItem === LeftSideBar)
         {
             this.setState({leftSideBarIsVisible: !this.state.leftSideBarIsVisible});
         }
@@ -44,8 +44,8 @@ class App extends Component {
     }
 
     checkActiveMenu() {
-        if (this.props.appState.ugeneMenuBar.activeMenuBarItem) {
-            return this.props.appState.ugeneMenuBar.activeMenuBarItem;
+        if (this.props.appState.ugeneCommandState.activeMenuBarItem) {
+            return this.props.appState.ugeneCommandState.activeMenuBarItem;
         }
         return "";
     }
@@ -86,9 +86,13 @@ class App extends Component {
             case "Settings":
                 this.props.actions.settings();
                 break;
+
+/* This a COMMAND, so don't need to have here
             case "AppsAdd":
-                this.props.actions.appsadd();
+                this.props.actions.appsadd({});
                 break;
+*/
+
             default:
                 console.log("handleMenuBarClick: name=" + name);
                 break;

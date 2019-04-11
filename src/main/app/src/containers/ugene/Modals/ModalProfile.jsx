@@ -6,7 +6,6 @@ import {Button, Container, Form, Input, Label, List, Message, Modal} from 'seman
 import {authenticated, authenticationFailure, login, logout} from '../../../data/modules/auth';
 import * as Names from "../../../constants/Names";
 import axios from "axios";
-import {socketsConnect} from "../../../middleware/socketActions";
 import jwt_decode from "jwt-decode";
 
 
