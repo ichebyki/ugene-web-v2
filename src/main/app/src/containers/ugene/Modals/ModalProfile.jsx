@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 import {Button, Container, Form, Input, Label, List, Message, Modal} from 'semantic-ui-react';
-/*import {loggedOut} from '../../../data/modules/auth';*/
-import {authenticated, authenticationFailure, login, logout} from '../../../data/modules/auth';
+import {authenticated, login, logout} from '../../../data/modules/auth';
 import * as Names from "../../../constants/Names";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -37,13 +36,15 @@ class ModalProfile extends Component {
 
     componentDidMount() {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        let self = this;
+
         axios.get(`/auth/profile/get`, {
             headers: {authorization: headerToken}
         }).then(
             res => {
                 console.info(res.data);
                 const userProfile = res.data;
-                this.setState({userProfile});
+                self.setState({userProfile});
             },
             failure => {
                 console.error(`Failed to fetch profile: ${failure}`)
@@ -141,7 +142,10 @@ class ModalProfile extends Component {
     }
 
     handleChange = (e, { name, value }) => {
-        this.setState({ [name]: value });
+        if (name !== 'username' &&
+            name !== 'enabled') {
+            this.setState({[name]: value});
+        }
     };
 
     handleUpdate = (e) => {
@@ -171,6 +175,7 @@ class ModalProfile extends Component {
                 if (state[key]) {
                     s[key] = state[key];
                 }
+                return true;
             });
             return Object.keys(s).map(function(key) {
                 if (s[key] instanceof Array
@@ -185,7 +190,7 @@ class ModalProfile extends Component {
                             return item;
                         });
                         let readOnly = 'false';
-                        if (key == 'username') {
+                        if (key === 'username') {
                             readOnly = 'true';
                         }
                         return <Form.Field key={key} inline>
@@ -227,9 +232,7 @@ class ModalProfile extends Component {
             formData[field] = this.refs[field].props.value;
         }
 
-        if (formData) {
-            const {userProfile} = this.state;
-
+        if (Object.keys(formData).length > 0) {
             let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
             axios.post('/auth/profile/put',
                 formData,

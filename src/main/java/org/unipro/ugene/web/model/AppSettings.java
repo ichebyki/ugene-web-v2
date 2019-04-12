@@ -18,7 +18,15 @@ import java.util.UUID;
 public class AppSettings {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(columnDefinition = "uuid",
+            name = "id",
+            updatable = false,
+            nullable = false)
     private UUID id;
 
     @Column(name = "username", length = 50)

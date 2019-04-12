@@ -1,7 +1,17 @@
 import React, {Component} from 'react';
+import {
+    Button,
+    Form,
+    Input,
+    List,
+    Message,
+    Modal,
+    Grid,
+    Header,
+    Checkbox, Portal, Segment, TransitionablePortal
+} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
-import {Button, Form, Input, List, Message, Modal, Grid, Header, Checkbox} from 'semantic-ui-react';
 import {login, logout} from '../../../data/modules/auth';
 import * as Names from "../../../constants/Names";
 import axios from "axios/index";
@@ -14,7 +24,7 @@ class ModalAppsAdd extends Component {
         open: PropTypes.bool.isRequired,
         dimmer: PropTypes.string.isRequired,
         onclose: PropTypes.func,
-        closeIcon: PropTypes.any.isRequired
+        closeIcon: PropTypes.any.isRequired,
     };
 
     state = {
@@ -30,22 +40,27 @@ class ModalAppsAdd extends Component {
             name: "",
             standalone: false,
             sourcePath: "",
-            classPathList: ["1", "2"],
-            testPathList: ["3", "4"],
+            classPathList: [""],
+            testPathList: [""],
             monitoringPort: 0,
             httpMonitoringPort: 0,
         },
         classPathList: "",
         testPathList: "",
+        openAlert: false,
     };
+
+    openAlert = (m) => this.setState({ openAlert: true, alertMessage: m });
+    closeAlert = () => this.setState({ openAlert: false, alertMessage: null });
 
     constructor(props) {
         super(props);
-        this.handleAddApp = this.handleAddApp.bind(this);
-    }
 
-    componentDidMount() {
-        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        const { app } = this.props;
+        if (app) {
+            this.state.appsAddSettings = app;
+        }
+        this.handleAddApp = this.handleAddApp.bind(this);
     }
 
     authFailedMessage() {
@@ -115,7 +130,7 @@ class ModalAppsAdd extends Component {
     closeModal = () => {
         this.setState({ open: false })
         if (this.props.onclose) {
-            this.props.onclose();
+            this.props.onclose(this.state.appsAddSettings);
         }
         if (this.props.appState.ugeneCommandState
             && this.props.appState.ugeneCommandState.actionsEx
@@ -129,8 +144,17 @@ class ModalAppsAdd extends Component {
         e.preventDefault();
 
         const { appsAddSettings } = this.state;
-        if (this.props.authState.signedIn && appsAddSettings) {
+        if (this.props.authState.signedIn
+                && appsAddSettings) {
+            if ( !(appsAddSettings.name && appsAddSettings.name.length > 0) ) {
+                let message = `Failed to add application: the 'name' is null`;
+                console.error(message);
+                this.openAlert(message);
+                return;
+            }
+
             let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+            let self = this;
 
             appsAddSettings['username'] = this.props.authState.username;
             appsAddSettings['id'] = null;
@@ -141,31 +165,52 @@ class ModalAppsAdd extends Component {
                 .then(
                     success => {
                         let settings = success.data;
-                        this.setState({appsAddSettings: settings});
+                        self.setState({appsAddSettings: settings});
+                        self.closeModal();
                     },
                     failure => {
-                        console.error(`Failed to add new application values: ${failure}`)
+                        let message = `Failed to add new application values: ${failure}`;
+                        console.error(message);
+                        self.openAlert(message);
                     }
                 );
         }
     };
 
     handleChange(e, o, key) {
+        if (key === 'username' || key === 'id') {
+            e.preventDefault();
+            return;
+        }
+
         let { appsAddSettings } = this.state;
-        if (typeof o.value !== 'undefined') {
-            appsAddSettings[key] = o.value;
-        }
-        else if (typeof o.checked !== 'undefined') {
+
+        if (typeof o.checked !== 'undefined') {
             appsAddSettings[key] = o.checked;
+            this.setState( {appsAddSettings: appsAddSettings} );
         }
-        this.setState( {appsAddSettings: appsAddSettings} );
+        else if (typeof o.value !== 'undefined') {
+            if (key.toString().toLowerCase().indexOf('port') > 0) {
+                appsAddSettings[key] = parseInt(o.value.toString());
+                if (isNaN(appsAddSettings[key])) {
+                    appsAddSettings[key] = 0;
+                }
+            }
+            else {
+                appsAddSettings[key] = o.value;
+            }
+            e.preventDefault();
+            this.setState( {appsAddSettings: appsAddSettings} );
+        }
     }
 
     handleAddItemList(e, o, key) {
         let { appsAddSettings } = this.state;
+
         let value = this.state[key];
         if (appsAddSettings && appsAddSettings[key]) {
             appsAddSettings[key].push(value);
+            e.preventDefault();
             this.setState( {appsAddSettings: appsAddSettings} );
             this.setState( {[key]: ""} );
         }
@@ -173,21 +218,26 @@ class ModalAppsAdd extends Component {
 
     handleDeleteItemList(e, o, key) {
         let { appsAddSettings } = this.state;
+
         if (appsAddSettings && appsAddSettings[key]) {
             appsAddSettings[key].splice(o.itemlistindex - 1, 1);
+            e.preventDefault();
             this.setState( {appsAddSettings: appsAddSettings} );
         }
     }
 
     handleChangeItemList(e, o, key) {
         let { appsAddSettings } = this.state;
+
         if (o.itemlistindex && o.itemlistindex > 0) {
             if (appsAddSettings && appsAddSettings[key]) {
                 appsAddSettings[key][o.itemlistindex - 1] = o.value;
+                e.preventDefault();
                 this.setState( {appsAddSettings: appsAddSettings} );
             }
         }
         else if (o.itemlistindex && o.itemlistindex == -1) {
+            e.preventDefault();
             this.setState( {[key]: o.value} );
         }
     }
@@ -213,10 +263,11 @@ class ModalAppsAdd extends Component {
                         i = i + 1;
                         return <Grid.Row key={key + "-row-" + i} style={{padding: "0.3rem"}}>
                             <Grid.Column width={4} textAlign='right'>
-                                {i == 1 ? key : ""}
+                                {i === 1 ? key : ""}
                             </Grid.Column>
                             <Grid.Column width={8}>
                                 <Input name={key + "-input-" + i}
+                                       type={key.toString().toLowerCase().indexOf('testPathList') >= 0 ? 'file' : 'text'}
                                        id={key + "-input-" + i}
                                        placeholder={key}
                                        value={item}
@@ -241,7 +292,7 @@ class ModalAppsAdd extends Component {
                             <Input name={key + "-input"}
                                    id={key + "-input"}
                                    placeholder={key}
-                                   value={state[key]}
+                                   value={"" + state[key]}
                                    ref={key + "-input"}
                                    itemlistindex={-1}
                                    onChange={(e, o) => this.handleChangeItemList(e, o, key)}/>
@@ -262,7 +313,6 @@ class ModalAppsAdd extends Component {
                         <Grid.Column width={8}>
                             <Checkbox name={key + "-checkbox"}
                                    id={key + "-checkbox"}
-                                   placeholder={key}
                                    checked={value}
                                    ref={key + "-checkbox"}
                                    onChange={(e, o) => this.handleChange(e, o, key)}/>
@@ -280,7 +330,7 @@ class ModalAppsAdd extends Component {
                             <Input name={key + "-input"}
                                    id={key + "-input"}
                                    placeholder={key}
-                                   value={value}
+                                   value={"" + value}
                                    ref={key + "-input"}
                                    onChange={(e, o) => this.handleChange(e, o, key)}/>
                         </Grid.Column>
@@ -326,8 +376,23 @@ class ModalAppsAdd extends Component {
                         <Button negative disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
                     </Form>
                 </Modal.Content>
+
+                {this.getAlert()}
             </Modal>
         )
+    }
+
+    getAlert() {
+        if (this.state.openAlert) {
+            return <Portal open={true}
+                           onOpen={this.openAlert}
+                           onClose={this.closeAlert}>
+                <Segment inverted color='red' style={{left: '40%', position: 'fixed', top: '20%', zIndex: 10000}}>
+                    <Header>Message</Header>
+                    <p>{this.state.alertMessage}</p>
+                </Segment>
+            </Portal>
+        }
     }
 }
 

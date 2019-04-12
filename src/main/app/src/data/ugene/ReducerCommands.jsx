@@ -22,6 +22,7 @@ export default function ReducerCommands(state = initialState, action) {
         case About:
         case Help:
         case SignIn:
+            return { ...state, activeMenuBarItem: action.type };
 
         /* RIGHT MENU */
         case SignOut:

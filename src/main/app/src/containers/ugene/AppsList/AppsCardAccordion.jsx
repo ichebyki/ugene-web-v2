@@ -13,7 +13,9 @@ import {
 
 
 class AppsCardAccordion extends React.Component {
-    state = {checkboxRadioGroup: ''};
+    state = {
+        checkboxRadioGroup: ''
+    };
 
     handleChange = (e, { name, value }) => {
         if (name === "checkboxRadioGroup") {
@@ -28,26 +30,35 @@ class AppsCardAccordion extends React.Component {
     }
 
     updateContent(checkBoxValue) {
-        const optionsTestscript = [
-            {
-                key: 1,
-                text: '.../test.sh',
-                value: 1,
-                content: <Header icon='file code' content='Script to run tests' subheader='/media/sf_share/unipro/Jazz/sonar-scanning-examples/sonarqube-scanner-maven/app-java/test.sh' />,
-            },
-            {
-                key: 2,
-                text: 'Script',
-                value: 2,
-                content: <Header icon='file code' content='Script to run tests' subheader='The size in the middle' />,
-            },
-            {
-                key: 3,
-                text: 'Manual',
-                value: 3,
-                content: <Header icon='terminal' content='Manual run' subheader='Start application manually' />,
-            },
-        ]
+        const app = this.props.app;
+        const size_header = 'tiny';
+        const size_str = 16;
+        let i = 0;
+        const optionsTestScript = app.testPathList.map(item => {
+            let str = '';
+            if (item.length > size_str) {
+                str = '...' + item.substring(item.length - size_str);
+            }
+            else {
+                str = item.substring(-1);
+            }
+            return {
+                key: ++i,
+                text: str,
+                value: i,
+                content: <Header size={size_header} icon='file code'
+                                 content={i.toString() + '. Script to run tests'}
+                                 subheader={item} />,
+            };
+        });
+        optionsTestScript.push({
+                key: ++i,
+                text: 'Manual run',
+                value: i,
+                content: <Header size={size_header} icon='terminal'
+                                 content={i.toString() + '. Manual run'}
+                                 subheader='Start application manually' />,
+            });
 
         const dropOptionsX = [
             { key: 1, text: 'Choice 1', value: 1 },
@@ -76,7 +87,7 @@ class AppsCardAccordion extends React.Component {
                                     <Grid.Row style={padd}>
                                         <Grid.Column textAlign='right' style={padd}>
                                             <Dropdown placeholder='How to run' button basic floating
-                                                      options={optionsTestscript}/>
+                                                      options={optionsTestScript}/>
                                         </Grid.Column>
                                         <Grid.Column style={padd}>
                                             <Button>Start manual testing</Button>

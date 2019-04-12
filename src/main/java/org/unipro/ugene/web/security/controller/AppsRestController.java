@@ -12,6 +12,7 @@ import org.unipro.ugene.web.service.AppSettingsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -64,6 +65,39 @@ public class AppsRestController {
         } else {
             return ResponseEntity.status(204).body(null);
         }
+    }
+
+    @RequestMapping(value = "/auth/apps/delete",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> deleteApplication(HttpServletRequest httpServletRequest,
+                                               @RequestBody AppSettings request) {
+        UUID id = request.getId();
+        AppSettings app = appSettingsService.getAppSettingsById(id);
+        if (app != null) {
+            appSettingsService.delete(app);
+            return ResponseEntity.status(200).body(id);
+        } else {
+            return ResponseEntity.status(204).body(null);
+        }
+    }
+
+    @RequestMapping(value = "/auth/apps/save",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> saveApplication(HttpServletRequest httpServletRequest,
+                                               @RequestBody AppSettings request) {
+        AppSettings old = appSettingsService.getAppSettingsById(request.getId());
+        if (old != null) {
+            AppSettings saved = appSettingsService.save(request);
+            if (saved != null) {
+                return ResponseEntity.status(200).body(saved);
+            }
+        } else {
+            return ResponseEntity.status(204).body(null);
+        }
+
+        return ResponseEntity.badRequest().body(null);
     }
 
 }

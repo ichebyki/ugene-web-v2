@@ -121,6 +121,7 @@ class SideBarMenu extends Component {
                     mostDeep = newlevel;
                 }
             }
+            return mostDeep;
         });
         return mostDeep;
     };

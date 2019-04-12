@@ -7,7 +7,7 @@ import ModalHelp from './ModalHelp';
 import ModalSignIn from './ModalSignIn';
 import ModalProfile from './ModalProfile';
 import ModalSettings from './ModalSettings';
-import ModalAppsAdd from "./ModalAppsAdd";
+import ModalAppsEdit from "../AppsList/ModalAppsAdd";
 
 export default class UgeneModal extends Component {
 
@@ -43,7 +43,7 @@ export default class UgeneModal extends Component {
                 );
             case AppsAdd:
                 return (
-                    <ModalAppsAdd open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalAppsEdit open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             default:
                 break;

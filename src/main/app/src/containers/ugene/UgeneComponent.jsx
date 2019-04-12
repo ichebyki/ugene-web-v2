@@ -22,6 +22,8 @@ export const ParseContent = (o, actions) => {
                         return <AppsList actions={actions} {...obj.props} />
                     case "UgeneWorkflow":
                         return <UgeneWorkflow actions={actions} {...obj.props} />
+                    default:
+                        return;
                 }
             }
         }

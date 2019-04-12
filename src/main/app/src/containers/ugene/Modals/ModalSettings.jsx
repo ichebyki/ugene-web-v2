@@ -36,13 +36,15 @@ class ModalSettings extends Component {
 
     componentDidMount() {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        let self = this;
+
         axios.get(`/auth/settings/get`, {
             headers: {authorization: headerToken}
         }).then(
             res => {
                 console.info(res.data);
                 const userSettings = res.data;
-                this.setState({userSettings});
+                self.setState({userSettings});
             },
             failure => {
                 console.error(`Failed to fetch settings: ${failure}`)
