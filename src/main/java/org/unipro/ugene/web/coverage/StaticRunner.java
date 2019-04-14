@@ -89,16 +89,18 @@ public class StaticRunner {
         }
 
         boolean fullPathToSources = true;
-        if (!fullPathToSources || !sourceLink.exists()) {
-            try {
-                Files.createSymbolicLink(sourceLink.toPath(), sourcePath.toPath());
-            } catch (IOException e) {
+        if (!fullPathToSources) {
+            if (!sourceLink.exists()) {
                 try {
-                    Files.createLink(sourceLink.toPath(), sourcePath.toPath());
-                } catch (IOException ex) {
-                    String out = runMkLink(sourceLink, sourcePath);
-                    if (!sourceLink.exists()) {
-                        return "Can't create link to source path \n" + out;
+                    Files.createSymbolicLink(sourceLink.toPath(), sourcePath.toPath());
+                } catch (IOException e) {
+                    try {
+                        Files.createLink(sourceLink.toPath(), sourcePath.toPath());
+                    } catch (IOException ex) {
+                        String out = runMkLink(sourceLink, sourcePath);
+                        if (!sourceLink.exists()) {
+                            return "Can't create link to source path \n" + out;
+                        }
                     }
                 }
             }
