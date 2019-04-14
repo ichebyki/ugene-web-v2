@@ -88,7 +88,7 @@ public class StaticRunner {
             return "Bad application source path";
         }
 
-        boolean fullPathToSources = true;
+        boolean fullPathToSources = false;
         if (!fullPathToSources) {
             if (!sourceLink.exists()) {
                 try {
@@ -180,7 +180,7 @@ public class StaticRunner {
     private String runMkLink(File sourceLink, File sourcePath) {
         List<String> cmd = Arrays.asList("CMD", "/C",
                 "MKLINK",
-                "/D",
+                "/J",
                 sourceLink.toString(),
                 sourcePath.toString());
         ProcessBuilder pb = new ProcessBuilder(cmd);
@@ -215,17 +215,22 @@ public class StaticRunner {
         boolean result = true;
 
         if (files != null) { //some JVMs return null for empty dirs
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    clearFolder(f);
-                } else {
-                    try {
+            try {
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        boolean isJunction = (f.toPath().compareTo(f.toPath().toRealPath()) != 0);
+                        if (isJunction) {
+                            Runtime rt = Runtime.getRuntime();
+                            rt.exec(new String[]{"cmd.exe", "/c", "rmdir", f.toString()});
+                        } else {
+                            clearFolder(f);
+                        }
+                    } else {
                         Files.deleteIfExists(f.toPath());
-                    } catch (IOException e) {
-                        result = false;
-                        break;
                     }
                 }
+            } catch (IOException e) {
+                result = false;
             }
         }
         return result;
