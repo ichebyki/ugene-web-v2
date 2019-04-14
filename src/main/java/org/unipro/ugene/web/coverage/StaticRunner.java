@@ -5,9 +5,11 @@ import org.unipro.ugene.web.model.UserSettings;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 public class StaticRunner {
 
@@ -86,7 +88,8 @@ public class StaticRunner {
             return "Bad application source path";
         }
 
-        if (!sourceLink.exists()) {
+        boolean fullPathToSources = true;
+        if (!fullPathToSources || !sourceLink.exists()) {
             try {
                 Files.createSymbolicLink(sourceLink.toPath(), sourcePath.toPath());
             } catch (IOException e) {
@@ -129,8 +132,27 @@ public class StaticRunner {
         if (sonarSettings.exists()) {
             try {
                 Files.deleteIfExists(sonarSettings.toPath());
+                Files.copy(sonarPropertiesTemplate.toPath(), sonarSettings.toPath());
+
+                FileInputStream in = new FileInputStream(sonarSettings);
+                Properties props = new Properties();
+                props.load(in);
+                in.close();
+
+                props.setProperty("PROJECT_KEY", app.getId().toString());
+                props.setProperty("PROJECT_NAME", app.getName());
+                if (fullPathToSources) {
+                    props.setProperty("PROJECT_SOURCES", app.getSourcePath());
+                }
+                else {
+                    props.setProperty("PROJECT_SOURCES", "src");
+                }
+
+                FileOutputStream out = new FileOutputStream(sonarSettings);
+                props.store(out, Instant.now().toString());
+                out.close();
             } catch (IOException e) {
-                return "Can't delete old application Sonar settings file";
+                return e.getMessage();
             }
         }
         if (!sonarSettings.exists()) {
@@ -156,7 +178,7 @@ public class StaticRunner {
     private String runMkLink(File sourceLink, File sourcePath) {
         List<String> cmd = Arrays.asList("CMD", "/C",
                 "MKLINK",
-                "/J",
+                "/D",
                 sourceLink.toString(),
                 sourcePath.toString());
         ProcessBuilder pb = new ProcessBuilder(cmd);
