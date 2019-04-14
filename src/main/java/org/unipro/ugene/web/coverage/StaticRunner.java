@@ -13,6 +13,8 @@ import java.util.Properties;
 
 public class StaticRunner {
 
+    private final boolean fullPathToSources = false;
+
     private final UserSettings settings;
     private final AppSettings app;
 
@@ -88,7 +90,6 @@ public class StaticRunner {
             return "Bad application source path";
         }
 
-        boolean fullPathToSources = false;
         if (!fullPathToSources) {
             if (!sourceLink.exists()) {
                 try {
@@ -134,6 +135,12 @@ public class StaticRunner {
         if (sonarSettings.exists()) {
             try {
                 Files.deleteIfExists(sonarSettings.toPath());
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+        }
+        if (!sonarSettings.exists()) {
+            try {
                 Files.copy(sonarPropertiesTemplate.toPath(), sonarSettings.toPath());
 
                 FileInputStream in = new FileInputStream(sonarSettings);
@@ -141,13 +148,13 @@ public class StaticRunner {
                 props.load(in);
                 in.close();
 
-                props.setProperty("PROJECT_KEY", app.getId().toString());
-                props.setProperty("PROJECT_NAME", app.getName());
+                props.setProperty("sonar.projectKey", app.getId().toString());
+                props.setProperty("sonar.projectName", app.getName());
                 if (fullPathToSources) {
-                    props.setProperty("PROJECT_SOURCES", app.getSourcePath());
+                    props.setProperty("sonar.sources", app.getSourcePath());
                 }
                 else {
-                    props.setProperty("PROJECT_SOURCES", "src");
+                    props.setProperty("sonar.sources", "src");
                 }
 
                 FileOutputStream out = new FileOutputStream(sonarSettings);
