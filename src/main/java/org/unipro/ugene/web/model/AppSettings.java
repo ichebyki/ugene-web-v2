@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -33,6 +33,9 @@ public class AppSettings {
     @NotNull
     @Size(min = 4, max = 50)
     private String username;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDateTime;
 
     @Column(name = "name", length = 500, unique = true)
     @NotNull

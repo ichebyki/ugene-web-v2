@@ -23,7 +23,7 @@ class Root extends Component {
                             <App/>
                         </div>
                         <div>
-                            {needDevTools ? <DevTools /> : <div />}
+                            {needDevTools && false ? <DevTools /> : <div />}
                         </div>
                     </PersistGate>
                 </ConnectedRouter>

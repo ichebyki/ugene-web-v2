@@ -1,4 +1,5 @@
 import React from 'react';
+import { StickyContainer, Sticky } from 'react-sticky';
 import {Button, Container, Header, Icon, Card, Segment, Portal} from 'semantic-ui-react';
 import ScrollPane from "../ScrollPane";
 import AppCard from "./AppCard";
@@ -27,8 +28,11 @@ class AppsList extends React.Component {
     openAlert = (m) => this.setState({ openAlert: true, alertMessage: m });
     closeAlert = () => this.setState({ openAlert: false, alertMessage: null });
 
-    openEditor = (app) => this.setState({ openEditor: true, appEdit: app });
-    closeEditor = () => this.setState({ openEditor: false, appEdit: null });
+    openEditor = (app) => { this.setState({ openEditor: true, appEdit: app, }); };
+    closeEditor = () => {
+        this.getAllAppList();
+        this.setState({ openEditor: false, appEdit: null, });
+    };
 
     openAdder = () => this.setState({ openAdder: true, appAdd: null });
     closeAdder = (app) => {
@@ -39,6 +43,10 @@ class AppsList extends React.Component {
     constructor(props) {
         super(props);
     }
+
+    refreshShoeList() {
+        this.setState({refreshShoeList: !this.state.refreshShoeList})
+    };
 
     componentDidMount() {
         this.getAllAppList();
@@ -53,6 +61,7 @@ class AppsList extends React.Component {
                  success => {
                      let apps = success.data;
                      self.setState({appsList: apps});
+                     self.refreshShoeList();
                  },
                  failure => {
                      console.error(`Failed to get all apps list: ${failure}`)
@@ -60,18 +69,18 @@ class AppsList extends React.Component {
              );
     }
 
-    getAllAppCards() {
+    getAllAppCards(refresh) {
         let apps = this.state.appsList;
-        let i = 0;
 
         let cards = apps.map(app => {
-            i = i + 1;
-            return <AppCard key={'app-card-' + i}
+            return <AppCard key={'app-card-' + app.id}
                             style={card_style}
                             actions={this.props.actions}
                             app={app}
                             deleteapp={this.deleteApp.bind(this)}
-                            editapp={this.editApp.bind(this)}/>
+                            editapp={this.editApp.bind(this)}
+                            onRunStaticClick={this.onRunStaticClick.bind(this)}
+                            refresh={refresh}/>
         }, this);
 
         return cards;
@@ -105,46 +114,92 @@ class AppsList extends React.Component {
             );
     }
 
-    editApp(app) {
-        this.openEditor(app);
+    editApp(app, card) {
+        this.openEditor(app, card);
     }
 
+    onRunStaticClick(e, d, app) {
+        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        let self = this;
+        let message = '';
+
+        axios.post('/auth/apps/runstatic',
+                   app,
+                   { headers: {authorization: headerToken} })
+             .then(
+                 success => {
+                     if (success.status == 200) {
+                         message = `Started static analyzer: ${success.statusText}`;
+                     }
+                     else {
+                         message = "Failed to start static analyzer \n"
+                                   + "status code " + success.status + " \n"
+                                   + "status text '" + success.statusText + "'";
+                         self.openAlert(message);
+                     }
+                     console.error(message);
+                     self.getAllAppList();
+                 },
+                 failure => {
+                     message = "Failed to start static analyzer \n"
+                               + "status code " + failure.response.status + " \n"
+                               + "status text '" + failure.response.statusText + "'\n"
+                               + failure.response.data["message"];
+                     console.error(message);
+                     this.openAlert(message);
+                 }
+             );
+    };
+
     render() {
+        const refreshShoeList = this.state.refreshShoeList;
         return (
             <ScrollPane>
-                <Container fluid style={{padding: "1em 3em 1em 3em"}}>
-                    <br/>
-                    <Header textAlign={'center'} as='h2'>Header</Header>
-                    <Card.Group centered stackable itemsPerRow={3}>
-                        {this.getAllAppCards()}
-                    </Card.Group>
-                    <Container textAlign={'center'}>
-                        <br/>
-                        <Button key={'app-add-button'}
-                                icon
-                                labelPosition='left'
-                                primary size='small'
-                                onClick={this.openAdder.bind(this)}>
-                            <Icon name='tasks'/> Add Application
-                        </Button>
-                    </Container>
-                </Container>
+                <Container fluid
+                           style={{padding: "1em 3em 1em 3em"}}>
+                    <Header textAlign={'center'} as='h2'>Application list</Header>
 
-                {this.getAlert()}
-                {this.getModalAdder()}
-                {this.getModalEditor()}
+                    <Card.Group centered stackable itemsPerRow={3}>
+                        {this.getAllAppCards(refreshShoeList)}
+                    </Card.Group>
+
+                    <Container textAlign={'center'}>
+                        <Button style={{position: 'fixed', bottom: '10px', right: '10px'}}
+                                key={'app-add-button'}
+                                circular
+                                icon={'plus'}
+                                color='green'
+                                size='huge'
+                                onClick={this.openAdder.bind(this)}/>
+                    </Container>
+
+                    {this.getAlert()}
+                    {this.getModalAdder()}
+                    {this.getModalEditor()}
+                </Container>
             </ScrollPane>
         );
     }
 
     getAlert() {
         if (this.state.openAlert) {
+            let i = 0;
             return <Portal open={true}
                     onOpen={this.openAlert}
                     onClose={this.closeAlert}>
-                <Segment inverted color='red' style={{left: '40%', position: 'fixed', top: '20%', zIndex: 10000}}>
+                <Segment padded
+                         inverted
+                         color='red'
+                         style={{width: '50%', left: '25%', right: '25%', position: 'fixed', top: '20%', zIndex: 10000}}>
                     <Header>Message</Header>
-                    <p>{this.state.alertMessage}</p>
+                    <Container style={{paddingLeft: '2em'}}>{
+                        this.state.alertMessage.split("\n").map(function(item) {
+                            i = i + 1;
+                            return <div key={"alertMessage-" + i}>
+                                {item}
+                            </div>;
+                        })
+                    }</Container>
                 </Segment>
             </Portal>
         }

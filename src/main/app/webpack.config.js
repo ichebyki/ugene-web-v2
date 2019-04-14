@@ -12,5 +12,11 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         devFlagPlugin,
         new ExtractTextPlugin('app.css')
-    ]
+    ],
+    devServer: {
+        historyApiFallback: true,
+        contentBase: './',
+        host: '0.0.0.0',
+        port: 4000 /* <--- Add this line and choose your own port number */
+    }
 };

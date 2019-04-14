@@ -46,12 +46,44 @@ public class UserSettings {
 
     public UserSettings(@NotNull @Size(min = 4, max = 50) String username) {
         this.username = username;
-        this.workdir = "<work-dir-path>";
+        this.workdir = "e:\\WORKS\\Unipro\\jazz-work-dir\\";
         this.sonarhost = "localhost";
         this.sonarport = 9000;
         this.sonarlogin = "admin";
         this.sonarpassword = "admin";
-        this.sonarrunnerpath = "<sonar-runner-path>";
+        this.sonarrunnerpath = "e:\\ichebyki\\VirtualBoxVM\\share\\unipro\\Jazz\\sonar-runner-2.4\\bin\\sonar-runner.bat";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getWorkdir() {
+        return workdir;
+    }
+
+    public String getSonarhost() {
+        return sonarhost;
+    }
+
+    public int getSonarport() {
+        return sonarport;
+    }
+
+    public String getSonarlogin() {
+        return sonarlogin;
+    }
+
+    public String getSonarpassword() {
+        return sonarpassword;
+    }
+
+    public String getSonarrunnerpath() {
+        return sonarrunnerpath;
     }
 }
 

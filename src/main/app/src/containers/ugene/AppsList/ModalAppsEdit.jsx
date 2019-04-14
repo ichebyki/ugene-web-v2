@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Button,
+import {
+    Button,
     Form,
     Input,
     List,
@@ -7,7 +8,8 @@ import {Button,
     Modal,
     Grid,
     Header,
-    Checkbox} from 'semantic-ui-react';
+    Checkbox, Label, Divider
+} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 import {login, logout} from '../../../data/modules/auth';
@@ -295,12 +297,35 @@ class ModalAppsEdit extends Component {
                         </Grid.Column>
                         <Grid.Column width={8}>
                             <Checkbox name={key + "-checkbox"}
-                                   id={key + "-checkbox"}
-                                   checked={value}
-                                   ref={key + "-checkbox"}
-                                   onChange={(e, o) => this.handleChange(e, o, key)}/>
+                                      id={key + "-checkbox"}
+                                      checked={value}
+                                      ref={key + "-checkbox"}
+                                      onChange={(e, o) => this.handleChange(e, o, key)}/>
                         </Grid.Column>
                         <Grid.Column width={1}>
+                        </Grid.Column>
+                    </Grid.Row>;
+                }
+                else if (key === "id" || key === 'username' || key == 'creationDateTime') {
+                    if (key === 'creationDateTime') {
+                        value = new Date(value).toLocaleString(undefined, {
+                            day: 'numeric',
+                            month: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        });
+                    }
+                    return <Grid.Row key={key + "-row"} style={{padding: "0.3rem"}}>
+                        <Grid.Column width={4} textAlign='right'>
+                            {key}
+                        </Grid.Column>
+                        <Grid.Column width={9}>
+                            <Header size={'tiny'}
+                                   name={key + "-label"}
+                                   id={key + "-label"}>
+                                {value}
+                            </Header>
                         </Grid.Column>
                     </Grid.Row>;
                 }
@@ -355,6 +380,7 @@ class ModalAppsEdit extends Component {
                         <Form.Field>
                             {this.getAppFields(appsAddSettings)}
                         </Form.Field>
+                        <Divider horizontal/>
                         <Button positive disabled={!authState.signedIn} onClick={e => this.handleAddApp(e)}>Save</Button>
                         <Button negative disabled={false} onClick={e => this.handleClose(e)}>Close</Button>
                     </Form>

@@ -157,6 +157,7 @@ class ModalAppsAdd extends Component {
             let self = this;
 
             appsAddSettings['username'] = this.props.authState.username;
+            appsAddSettings['creationDateTime'] = new Date().valueOf();
             appsAddSettings['id'] = null;
 
             axios.post('/auth/apps/put',
@@ -267,7 +268,6 @@ class ModalAppsAdd extends Component {
                             </Grid.Column>
                             <Grid.Column width={8}>
                                 <Input name={key + "-input-" + i}
-                                       type={key.toString().toLowerCase().indexOf('testPathList') >= 0 ? 'file' : 'text'}
                                        id={key + "-input-" + i}
                                        placeholder={key}
                                        value={item}

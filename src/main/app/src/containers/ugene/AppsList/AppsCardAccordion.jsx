@@ -2,13 +2,12 @@ import React from 'react';
 
 import {
     Accordion,
-    Button, Card,
+    Button,
     Dropdown,
     Form,
     Grid,
     Header,
-    Input,
-    Label
+    Input
 } from "semantic-ui-react";
 
 
@@ -17,19 +16,25 @@ class AppsCardAccordion extends React.Component {
         checkboxRadioGroup: ''
     };
 
+    componentWillReceiveProps(props) {
+        const { refresh } = this.props;
+        if (props.refresh !== refresh) {
+            this.updateContent();
+        }
+    }
+
     handleChange = (e, { name, value }) => {
         if (name === "checkboxRadioGroup") {
-            /*this.setState({ [name]: value });*/
             this.setState({ checkboxRadioGroup : value });
-            this.updateContent(value);
+            this.updateContent();
         }
     };
 
     componentWillMount() {
-        this.updateContent('');
+        this.updateContent();
     }
 
-    updateContent(checkBoxValue) {
+    updateContent() {
         const app = this.props.app;
         const size_header = 'tiny';
         const size_str = 16;
@@ -90,7 +95,7 @@ class AppsCardAccordion extends React.Component {
                                                       options={optionsTestScript}/>
                                         </Grid.Column>
                                         <Grid.Column style={padd}>
-                                            <Button>Start manual testing</Button>
+                                            <Button>Start testing</Button>
                                         </Grid.Column>
                                     </Grid.Row>
 
@@ -138,7 +143,10 @@ class AppsCardAccordion extends React.Component {
                                 <Grid columns={2} style={padd}>
                                     <Grid.Row style={padd}>
                                         <Grid.Column textAlign='right' style={padd}>
-                                            <Button size='small'>
+                                            <Button size='small'
+                                                    onClick={(e, d) => {
+                                                        this.props.onRunStaticClick(e, d, this.props.app);
+                                                    }}>
                                                 Start static
                                             </Button>
                                         </Grid.Column>

@@ -9,6 +9,27 @@ import AppsCardAccordion from "./AppsCardAccordion";
 
 class AppCard extends React.Component {
 
+    state = {
+        app: null,
+        refresh: false,
+    };
+
+    constructor(props) {
+        super(props);
+
+        const { app } = this.props;
+        if (app) {
+            this.state.app = app;
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        const { refresh } = this.props;
+        if (props.refresh !== refresh) {
+            this.updateApp(this.props.app);
+        }
+    }
+
     deleteApp(app) {
         if (this.props.deleteapp) {
             this.props.deleteapp(app);
@@ -21,8 +42,13 @@ class AppCard extends React.Component {
         }
     }
 
+    updateApp(app) {
+        this.setState({app: app});
+    }
+
     render() {
-        let app = this.props.app;
+        const { app } = this.state;
+        const { refresh } = this.props;
 
         return <Card style={this.props.style}>
             <Card.Content>
@@ -39,7 +65,9 @@ class AppCard extends React.Component {
                 <a href="#">No results yet</a>
             </Card.Content>
             <Card.Content extra>
-                <AppsCardAccordion app={app}/>
+                <AppsCardAccordion app={app}
+                                   onRunStaticClick={this.props.onRunStaticClick}
+                                   refresh={{refresh}}/>
             </Card.Content>
         </Card>
     }
