@@ -32,6 +32,14 @@ public class StaticRunner {
     }
 
     public String runSonarRunner() {
+        String check = checkSettings();
+        if (check != null) {
+            return check;
+        }
+        return null;
+    }
+
+    private String checkSettings() {
         /*
           local sonarRunner = path.join(settings.workDir, SONAR_RUNNER)
           local appDir = path.join(settings.workDir, tostring(app.id) .. "-static")
