@@ -11,6 +11,7 @@ class AppCard extends React.Component {
 
     state = {
         app: null,
+        resultLink: '',
         refresh: false,
     };
 
@@ -43,6 +44,13 @@ class AppCard extends React.Component {
     }
 
     updateApp(app) {
+        if (app.staticstate !== 'STATIC_REPORT_READY') {
+            let resultLink = <a href={'#'}>No results yet</a>
+            this.setState({resultLink: resultLink});
+        } else {
+            let resultLink = <a href={'#'}>Results are ready</a>
+            this.setState({resultLink: resultLink});
+        }
         this.setState({app: app});
     }
 
@@ -62,7 +70,7 @@ class AppCard extends React.Component {
                 <Card.Description> </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <a href="#">No results yet</a>
+                {this.state.resultLink}
             </Card.Content>
             <Card.Content extra>
                 <AppsCardAccordion app={app}

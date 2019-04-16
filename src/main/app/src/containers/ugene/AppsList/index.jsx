@@ -72,7 +72,7 @@ class AppsList extends React.Component {
     getAllAppCards(refresh) {
         let apps = this.state.appsList;
 
-        let cards = apps.map(app => {
+        return apps.map(app => {
             return <AppCard key={'app-card-' + app.id}
                             style={card_style}
                             actions={this.props.actions}
@@ -83,8 +83,6 @@ class AppsList extends React.Component {
                             onGetStaticReport={this.onGetStaticReport.bind(this)}
                             refresh={refresh}/>
         }, this);
-
-        return cards;
     }
 
     deleteApp(app) {
@@ -119,7 +117,7 @@ class AppsList extends React.Component {
         this.openEditor(app, card);
     }
 
-    onRunStaticClick(e, d, app) {
+    onRunStaticClick(e, d, app, accordion) {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
         let self = this;
         let message = '';
@@ -127,32 +125,33 @@ class AppsList extends React.Component {
         axios.post('/auth/apps/static/report/runsonar',
                    app,
                    { headers: {authorization: headerToken} })
-             .then(
-                 success => {
-                     if (success.status == 200) {
-                         message = `Started static analyzer: ${success.statusText}`;
-                     }
-                     else {
-                         message = "Failed to start static analyzer \n"
-                                   + "status code " + success.status + " \n"
-                                   + "status text '" + success.statusText + "'";
-                         self.openAlert(message);
-                     }
-                     console.error(message);
-                     self.getAllAppList();
-                 },
-                 failure => {
-                     message = "Failed to start static analyzer \n"
-                               + "status code " + failure.response.status + " \n"
-                               + "status text '" + failure.response.statusText + "'\n"
-                               + failure.response.data["message"];
-                     console.error(message);
-                     this.openAlert(message);
+             .then(function (success) {
+                 if (success.status == 200) {
+                     message = `Started static analyzer: ${success.statusText}`;
                  }
-             );
+                 else {
+                     message = "Failed to start static analyzer \n"
+                               + "status code " + success.status + " \n"
+                               + "status text '" + success.statusText + "'";
+                     self.openAlert(message);
+                 }
+             })
+             .catch(function (failure) {
+                 message = "Failed to start static analyzer \n"
+                           + "status code " + failure.response.status + " \n"
+                           + "status text '" + failure.response.statusText + "'\n"
+                           + failure.response.data["message"];
+                 this.openAlert(message);
+             })
+             .then(function () {
+                 // always executed
+                 console.error(message);
+                 self.getAllAppList();
+             });
+        setTimeout( () => self.getAllAppList(), 1000);
     };
 
-    onGetStaticReport(e, d, app) {
+    onGetStaticReport(e, d, app, accordion) {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
         let self = this;
         let message = '';
@@ -160,29 +159,30 @@ class AppsList extends React.Component {
         axios.post('/auth/apps/static/report/fetch',
                    app,
                    { headers: {authorization: headerToken} })
-             .then(
-                 success => {
-                     if (success.status == 200) {
-                         message = `Started fetching static report: ${success.statusText}`;
-                     }
-                     else {
-                         message = "Failed to fetch static report \n"
-                                   + "status code " + success.status + " \n"
-                                   + "status text '" + success.statusText + "'";
-                         self.openAlert(message);
-                     }
-                     console.error(message);
-                     self.getAllAppList();
-                 },
-                 failure => {
-                     message = "Failed to fetch static report \n"
-                               + "status code " + failure.response.status + " \n"
-                               + "status text '" + failure.response.statusText + "'\n"
-                               + failure.response.data["message"];
-                     console.error(message);
-                     this.openAlert(message);
+             .then(function (success) {
+                 if (success.status === 200) {
+                     message = `Started fetching static report: ${success.statusText}`;
                  }
-             );
+                 else {
+                     message = "Failed to fetch static report \n"
+                               + "status code " + success.status + " \n"
+                               + "status text '" + success.statusText + "'";
+                     self.openAlert(message);
+                 }
+             })
+             .catch(function (failure) {
+                 message = "Failed to fetch static report \n"
+                           + "status code " + failure.response.status + " \n"
+                           + "status text '" + failure.response.statusText + "'\n"
+                           + failure.response.data["message"];
+                 this.openAlert(message);
+             })
+             .then(function () {
+                 // always executed
+                 console.error(message);
+                 self.getAllAppList();
+             });
+        setTimeout( () => self.getAllAppList(), 1000);
     };
 
     render() {

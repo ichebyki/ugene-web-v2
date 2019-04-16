@@ -47,7 +47,7 @@ public class UserSettings {
     public UserSettings(@NotNull @Size(min = 4, max = 50) String username) {
         this.username = username;
         this.workdir = "e:\\WORKS\\Unipro\\jazz-work-dir\\";
-        this.sonarhost = "localhost";
+        this.sonarhost = "192.168.207.4";
         this.sonarport = 9000;
         this.sonarlogin = "admin";
         this.sonarpassword = "admin";

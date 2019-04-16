@@ -68,7 +68,8 @@ public class ReportRestController {
             response.put("message", "Application settings are not set");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
-            StaticRunner runner = new StaticRunner(coverageStaticIssueService, settings, app);
+            StaticRunner runner = new StaticRunner(coverageStaticIssueService,
+                    appSettingsService, settings, app);
             String result = runner.fetchReport();
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }

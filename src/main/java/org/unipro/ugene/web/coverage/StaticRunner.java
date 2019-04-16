@@ -7,6 +7,7 @@ import javafx.util.Pair;
 import org.unipro.ugene.web.model.AppSettings;
 import org.unipro.ugene.web.model.CoverageStaticIssue;
 import org.unipro.ugene.web.model.UserSettings;
+import org.unipro.ugene.web.service.AppSettingsService;
 import org.unipro.ugene.web.service.CoverageStaticIssueService;
 
 import java.io.*;
@@ -24,11 +25,14 @@ public class StaticRunner {
     private final UserSettings settings;
     private final AppSettings app;
     private final CoverageStaticIssueService coverageStaticIssueService;
+    private final AppSettingsService appSettingsService;
 
     public StaticRunner(CoverageStaticIssueService coverageStaticIssueService,
+                        AppSettingsService appSettingsService,
                         UserSettings settings,
                         AppSettings app) {
         this.coverageStaticIssueService = coverageStaticIssueService;
+        this.appSettingsService = appSettingsService;
         this.settings = settings;
         this.app = app;
     }
@@ -41,15 +45,7 @@ public class StaticRunner {
         return app;
     }
 
-    public String runSonarRunner() {
-        String check = checkSettings();
-        if (check != null) {
-            return check;
-        }
-        return null;
-    }
-
-    private String checkSettings() {
+    private String checkSettingsAndRunSonar() {
         /*
           local sonarRunner = path.join(settings.workDir, SONAR_RUNNER)
           local appDir = path.join(settings.workDir, tostring(app.id) .. "-static")
@@ -109,22 +105,29 @@ public class StaticRunner {
         }
 
         if (!fullPathToSources) {
-            if (!sourceLink.exists()) {
+            String out = "";
+            int tryCount = 2;
+            for (int i = 0; i < tryCount; i++){
                 try {
-                    Files.createSymbolicLink(sourceLink.toPath(), sourcePath.toPath());
-                } catch (IOException e) {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                if (!sourceLink.exists()) {
                     try {
-                        Files.createLink(sourceLink.toPath(), sourcePath.toPath());
-                    } catch (IOException ex) {
-                        String out = runShellCmd(appWorkDir, Arrays.asList("CMD", "/C",
-                                "MKLINK",
-                                "/J",
-                                sourceLink.toString(),
-                                sourcePath.toString()));
-                        if (!sourceLink.exists()) {
-                            return "Can't create link to source path \n" + out;
+                        Files.createSymbolicLink(sourceLink.toPath(), sourcePath.toPath());
+                    } catch (IOException e) {
+                        try {
+                            Files.createLink(sourceLink.toPath(), sourcePath.toPath());
+                        } catch (IOException ex) {
+                            out = runShellCmd(appWorkDir, Arrays.asList("CMD", "/C",
+                                    "MKLINK",
+                                    "/J",
+                                    sourceLink.toString(),
+                                    sourcePath.toString()));
                         }
                     }
+                }
+                if (!sourceLink.exists() && i > tryCount) {
+                    return "Can't create link to source path \n" + out;
                 }
             }
         }
@@ -201,14 +204,12 @@ public class StaticRunner {
          INFO:  -v,--version          Display version information
          INFO:  -X,--debug            Produce execution debug output
          */
-        String out = runShellCmd(appWorkDir,
+        return runShellCmd(appWorkDir,
                 Arrays.asList("CMD", "/C",
                         sonarRunner.toString(),
                         "-Dsonar.host.url=http://" + settings.getSonarhost() + ":" + settings.getSonarport(),
                         "-Dsonar.login=" + settings.getSonarlogin(),
                         "-Dsonar.password=" + settings.getSonarpassword()));
-
-        return out;
     }
 
     /*
@@ -288,7 +289,23 @@ public class StaticRunner {
         return result;
     }
 
+    public String runSonarRunner() {
+        app.setStaticstate(AppSettings.AppStateStatic.STATIC_ANALYZE_STARTED);
+        appSettingsService.updateAppSettings(app);
+
+        String result = checkSettingsAndRunSonar();
+
+        app.setStaticstate(AppSettings.AppStateStatic.STATIC_ANALYZE_COMPLETED);
+        appSettingsService.updateAppSettings(app);
+
+        return result;
+    }
+
     public String fetchReport() {
+        app.setStaticstate(AppSettings.AppStateStatic.STATIC_REPORT_STARTED);
+        appSettingsService.updateAppSettings(app);
+
+        String result = null;
         Map<String, String> params = Stream.of(new String[][]{
                 {"pageSize", "-1"},
                 {"componentRoots", app.getId().toString()},
@@ -333,10 +350,14 @@ public class StaticRunner {
                     coverageStaticIssueService.addCoverageStaticAllIssues(listIssues);
                 }
             }
-            return null;
         } catch (IOException e) {
-            return e.getMessage();
+            result = e.getMessage();
         }
+
+        app.setStaticstate(AppSettings.AppStateStatic.STATIC_REPORT_READY);
+        appSettingsService.updateAppSettings(app);
+
+        return result;
     }
 
 }

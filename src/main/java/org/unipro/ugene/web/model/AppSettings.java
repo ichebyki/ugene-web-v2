@@ -64,6 +64,9 @@ public class AppSettings {
     @NotNull
     private boolean standalone;
 
+    @Column(name = "staticstate")
+    private AppStateStatic staticstate = AppStateStatic.STATIC_ANALYZE_NOT_RUN;
+
     public UUID getId() {
         return id;
     }
@@ -134,6 +137,24 @@ public class AppSettings {
 
     public void setStandalone(boolean standalone) {
         this.standalone = standalone;
+    }
+
+    public AppStateStatic getStaticstate() {
+        return staticstate;
+    }
+
+    public void setStaticstate(AppStateStatic staticstate) {
+        this.staticstate = staticstate;
+    }
+
+    public enum AppStateStatic {
+        UNDEFINED,
+        STATIC_ANALYZE_NOT_RUN,
+        STATIC_ANALYZE_STARTED,
+        STATIC_ANALYZE_COMPLETED,
+        STATIC_REPORT_NOT_RUN,
+        STATIC_REPORT_STARTED,
+        STATIC_REPORT_READY
     }
 }
 

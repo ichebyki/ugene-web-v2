@@ -12,8 +12,17 @@ import {
 
 
 class AppsCardAccordion extends React.Component {
+    startStaticReady = 'Start static';
+    startStaticStarted = 'Static started...';
+    startStaticCompleted = 'Static completed';
+    generateStaticReady = 'Generate static';
+    generateStaticStarted = 'Generate started...';
+    generateStaticCompleted = 'Generate completed';
+
     state = {
-        checkboxRadioGroup: ''
+        checkboxRadioGroup: '',
+        startStaticText: this.startStaticReady,
+        generateStaticText: this.generateStaticReady,
     };
 
     componentWillReceiveProps(props) {
@@ -39,6 +48,7 @@ class AppsCardAccordion extends React.Component {
         const size_header = 'tiny';
         const size_str = 16;
         let i = 0;
+
         const optionsTestScript = app.testPathList.map(item => {
             let str = '';
             if (item.length > size_str) {
@@ -74,6 +84,36 @@ class AppsCardAccordion extends React.Component {
         const padd = {
             padding: "0.1em"
         };
+
+        /*
+            STATIC_ANALYZE_NOT_RUN,
+            STATIC_ANALYZE_STARTED,
+            STATIC_ANALYZE_COMPLETED,
+            STATIC_REPORT_NOT_RUN,
+            STATIC_REPORT_STARTED,
+            STATIC_REPORT_READY
+         */
+        if (app.staticstate === 'STATIC_REPORT_READY') {
+            this.setState({ startStaticText: this.startStaticCompleted,
+                              generateStaticText: this.generateStaticCompleted } );
+        }
+        else if (app.staticstate === 'STATIC_REPORT_STARTED') {
+            this.setState({ startStaticText: this.startStaticCompleted,
+                              generateStaticText: this.generateStaticStarted } );
+        }
+        else if (app.staticstate === 'STATIC_REPORT_NOT_RUN'
+                 || app.staticstate === 'STATIC_ANALYZE_COMPLETED') {
+            this.setState({ startStaticText: this.startStaticCompleted,
+                              generateStaticText: this.generateStaticReady } );
+        }
+        else if (app.staticstate === 'STATIC_ANALYZE_STARTED') {
+            this.setState({ startStaticText: this.startStaticStarted,
+                              generateStaticText: this.generateStaticReady } );
+        }
+        else if (app.staticstate === 'STATIC_ANALYZE_NOT_RUN') {
+            this.setState({ startStaticText: this.startStaticReady,
+                              generateStaticText: this.generateStaticReady } );
+        }
 
         this.setState({
             panels: [
@@ -144,19 +184,17 @@ class AppsCardAccordion extends React.Component {
                                     <Grid.Row style={padd}>
                                         <Grid.Column textAlign='right' style={padd}>
                                             <Button size='small'
+                                                    content={this.state.startStaticText}
                                                     onClick={(e, d) => {
-                                                        this.props.onRunStaticClick(e, d, this.props.app);
-                                                    }}>
-                                                {this.state.startStaticTest}
-                                            </Button>
+                                                        this.props.onRunStaticClick(e, d, this.props.app, this);
+                                                    }}/>
                                         </Grid.Column>
                                         <Grid.Column style={padd}>
                                             <Button size='small'
+                                                    content={this.state.generateStaticText}
                                                     onClick={(e, d) => {
-                                                        this.props.onGetStaticReport(e, d, this.props.app);
-                                                    }}>
-                                                Generate static
-                                            </Button>
+                                                        this.props.onGetStaticReport(e, d, this.props.app, this);
+                                                    }}/>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
