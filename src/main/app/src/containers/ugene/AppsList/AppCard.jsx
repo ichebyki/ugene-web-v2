@@ -67,6 +67,7 @@ class AppCard extends React.Component {
             <Card.Content extra>
                 <AppsCardAccordion app={app}
                                    onRunStaticClick={this.props.onRunStaticClick}
+                                   onGetStaticReport={this.props.onGetStaticReport}
                                    refresh={{refresh}}/>
             </Card.Content>
         </Card>

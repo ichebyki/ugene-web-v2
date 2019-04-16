@@ -147,11 +147,14 @@ class AppsCardAccordion extends React.Component {
                                                     onClick={(e, d) => {
                                                         this.props.onRunStaticClick(e, d, this.props.app);
                                                     }}>
-                                                Start static
+                                                {this.state.startStaticTest}
                                             </Button>
                                         </Grid.Column>
                                         <Grid.Column style={padd}>
-                                            <Button size='small'>
+                                            <Button size='small'
+                                                    onClick={(e, d) => {
+                                                        this.props.onGetStaticReport(e, d, this.props.app);
+                                                    }}>
                                                 Generate static
                                             </Button>
                                         </Grid.Column>

@@ -24,7 +24,7 @@ import java.util.Map;
 
 
 @RestController
-public class CoverageRestController {
+public class ReportRestController {
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -47,16 +47,15 @@ public class CoverageRestController {
     @Qualifier("coverageStaticIssueService")
     private CoverageStaticIssueService coverageStaticIssueService;
 
-    @RequestMapping(value = "/auth/apps/static/report/runsonar",
+    @RequestMapping(value = "/auth/apps/static/report/fetch",
             method = RequestMethod.POST,
             consumes = "application/json")
-    public ResponseEntity<?> coverageRunStatic(HttpServletRequest httpServletRequest,
+    public ResponseEntity<?> fetchStaticReport(HttpServletRequest httpServletRequest,
                                                @RequestBody AppSettings request) {
         AppSettings app = appSettingsService.getAppSettingsById(request.getId());
-
         String token = httpServletRequest.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        if (!username.equals(request.getUsername())) {
+        if (!username.equals(request.getUsername()) && !app.getId().equals(request.getId())) {
             return ResponseEntity.status(401).body(null);
         }
 
@@ -70,15 +69,8 @@ public class CoverageRestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
             StaticRunner runner = new StaticRunner(coverageStaticIssueService, settings, app);
-            String message = runner.runSonarRunner();
-
-            if (message == null) {
-                return ResponseEntity.status(HttpStatus.OK).body(null);
-            }
-            else {
-                response.put("message", message);
-                return ResponseEntity.badRequest().body(response);
-            }
+            String result = runner.fetchReport();
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
     }
 

@@ -80,6 +80,7 @@ class AppsList extends React.Component {
                             deleteapp={this.deleteApp.bind(this)}
                             editapp={this.editApp.bind(this)}
                             onRunStaticClick={this.onRunStaticClick.bind(this)}
+                            onGetStaticReport={this.onGetStaticReport.bind(this)}
                             refresh={refresh}/>
         }, this);
 
@@ -123,7 +124,7 @@ class AppsList extends React.Component {
         let self = this;
         let message = '';
 
-        axios.post('/auth/apps/runstatic',
+        axios.post('/auth/apps/static/report/runsonar',
                    app,
                    { headers: {authorization: headerToken} })
              .then(
@@ -142,6 +143,39 @@ class AppsList extends React.Component {
                  },
                  failure => {
                      message = "Failed to start static analyzer \n"
+                               + "status code " + failure.response.status + " \n"
+                               + "status text '" + failure.response.statusText + "'\n"
+                               + failure.response.data["message"];
+                     console.error(message);
+                     this.openAlert(message);
+                 }
+             );
+    };
+
+    onGetStaticReport(e, d, app) {
+        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        let self = this;
+        let message = '';
+
+        axios.post('/auth/apps/static/report/fetch',
+                   app,
+                   { headers: {authorization: headerToken} })
+             .then(
+                 success => {
+                     if (success.status == 200) {
+                         message = `Started fetching static report: ${success.statusText}`;
+                     }
+                     else {
+                         message = "Failed to fetch static report \n"
+                                   + "status code " + success.status + " \n"
+                                   + "status text '" + success.statusText + "'";
+                         self.openAlert(message);
+                     }
+                     console.error(message);
+                     self.getAllAppList();
+                 },
+                 failure => {
+                     message = "Failed to fetch static report \n"
                                + "status code " + failure.response.status + " \n"
                                + "status text '" + failure.response.statusText + "'\n"
                                + failure.response.data["message"];

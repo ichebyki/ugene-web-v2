@@ -1,15 +1,21 @@
 package org.unipro.ugene.web.coverage;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import javafx.util.Pair;
 import org.unipro.ugene.web.model.AppSettings;
+import org.unipro.ugene.web.model.CoverageStaticIssue;
 import org.unipro.ugene.web.model.UserSettings;
+import org.unipro.ugene.web.service.CoverageStaticIssueService;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StaticRunner {
 
@@ -17,8 +23,12 @@ public class StaticRunner {
 
     private final UserSettings settings;
     private final AppSettings app;
+    private final CoverageStaticIssueService coverageStaticIssueService;
 
-    public StaticRunner(UserSettings settings, AppSettings app) {
+    public StaticRunner(CoverageStaticIssueService coverageStaticIssueService,
+                        UserSettings settings,
+                        AppSettings app) {
+        this.coverageStaticIssueService = coverageStaticIssueService;
         this.settings = settings;
         this.app = app;
     }
@@ -106,7 +116,11 @@ public class StaticRunner {
                     try {
                         Files.createLink(sourceLink.toPath(), sourcePath.toPath());
                     } catch (IOException ex) {
-                        String out = runMkLink(sourceLink, sourcePath);
+                        String out = runShellCmd(appWorkDir, Arrays.asList("CMD", "/C",
+                                "MKLINK",
+                                "/J",
+                                sourceLink.toString(),
+                                sourcePath.toString()));
                         if (!sourceLink.exists()) {
                             return "Can't create link to source path \n" + out;
                         }
@@ -176,7 +190,25 @@ public class StaticRunner {
             return "Can't find Sonar settings file";
         }
 
-        return null;
+        /*
+         INFO:
+         INFO: usage: sonar-runner [options]
+         INFO:
+         INFO: Options:
+         INFO:  -D,--define <arg>     Define property
+         INFO:  -e,--errors           Produce execution error messages
+         INFO:  -h,--help             Display help information
+         INFO:  -v,--version          Display version information
+         INFO:  -X,--debug            Produce execution debug output
+         */
+        String out = runShellCmd(appWorkDir,
+                Arrays.asList("CMD", "/C",
+                        sonarRunner.toString(),
+                        "-Dsonar.host.url=http://" + settings.getSonarhost() + ":" + settings.getSonarport(),
+                        "-Dsonar.login=" + settings.getSonarlogin(),
+                        "-Dsonar.password=" + settings.getSonarpassword()));
+
+        return out;
     }
 
     /*
@@ -192,33 +224,38 @@ public class StaticRunner {
         Target  Specifies the path (relative or absolute) that the new link
                 refers to.
      */
-    private String runMkLink(File sourceLink, File sourcePath) {
-        List<String> cmd = Arrays.asList("CMD", "/C",
-                "MKLINK",
-                "/J",
-                sourceLink.toString(),
-                sourcePath.toString());
+    private String runShellCmd(File workdir, List<String> cmd) {
         ProcessBuilder pb = new ProcessBuilder(cmd);
+        pb.directory(workdir);
         pb.redirectErrorStream(true);
+        Map<String, String> env = pb.environment();
+        env.put("JAVA_HOME", System.getProperty("java.home"));
+        env.put("PATH", System.getProperty("java.home") + File.pathSeparator + "bin;" + System.getProperty("PATH"));
+
         Process process = null;
         try {
             process = pb.start();
         } catch (IOException e) {
             return e.getMessage();
         }
-        BufferedReader inStreamReader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()));
 
         String out = "";
-        for (String s = ""; s != null; ) {
-            out = out + s;
-            try {
+        try {
+            InputStreamReader isr = new InputStreamReader(process.getInputStream());
+            BufferedReader inStreamReader = new BufferedReader(isr);
+            for (String s = ""; s != null; ) {
+                out = out + s;
                 s = inStreamReader.readLine();
-            } catch (IOException e) {
-                return e.getMessage();
             }
+            inStreamReader.close();
+        } catch (IOException e) {
+            return e.getMessage();
         }
-        return out;
+
+        if (process.exitValue() != 0) {
+            return out;
+        }
+        return null;
     }
 
     private boolean checkDirRights(File d) {
@@ -250,4 +287,57 @@ public class StaticRunner {
         }
         return result;
     }
+
+    public String fetchReport() {
+        Map<String, String> params = Stream.of(new String[][]{
+                {"pageSize", "-1"},
+                {"componentRoots", app.getId().toString()},
+                {"format", "json"}
+        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+        try {
+            Pair<Integer, String> response = SonarApi.httpRequest(settings,
+                    app,
+                    "GET",
+                    "/api/issues/search",
+                    params);
+            String jsonString = response.getValue();
+            if (jsonString != null) {
+                JsonNode rootNode;
+                ObjectMapper objectMapper;
+                objectMapper = new ObjectMapper();
+                rootNode = objectMapper.readTree(jsonString);
+                JsonNode issues = rootNode.get("issues");
+                List<CoverageStaticIssue> listIssues = new ArrayList<>();
+
+                if (issues.isArray()) {
+                    ArrayNode arrayNode = (ArrayNode) issues;
+                    for (int i = 0; i < arrayNode.size(); i++) {
+                        //map json to object
+                        CoverageStaticIssue issue = objectMapper.convertValue(arrayNode.get(i), CoverageStaticIssue.class);
+                        UUID appid = UUID.fromString(arrayNode.get(i).get("project").textValue());
+                        String source = arrayNode.get(i).get("component").textValue()
+                                .replaceFirst("^" + appid.toString(), "")
+                                .replaceFirst("^:", "")
+                                .replaceFirst("^src/", "")
+                                .replaceFirst("^src\\\\", "");
+                        String pakkage = Paths.get(source).getParent().toString()
+                                .replace("\\", "/");
+                        source = Paths.get(source).getFileName().toString();
+
+                        issue.setAppid(appid);
+                        issue.setSource(source);
+                        issue.setPakkage(pakkage);
+                        listIssues.add(issue);
+                    }
+                    coverageStaticIssueService.addCoverageStaticAllIssues(listIssues);
+                }
+            }
+            return null;
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+
 }
+
