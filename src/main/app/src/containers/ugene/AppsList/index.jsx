@@ -126,7 +126,7 @@ class AppsList extends React.Component {
                    app,
                    { headers: {authorization: headerToken} })
              .then(function (success) {
-                 if (success.status == 200) {
+                 if (success.status === 200) {
                      message = `Started static analyzer: ${success.statusText}`;
                  }
                  else {
@@ -141,7 +141,7 @@ class AppsList extends React.Component {
                            + "status code " + failure.response.status + " \n"
                            + "status text '" + failure.response.statusText + "'\n"
                            + failure.response.data["message"];
-                 this.openAlert(message);
+                 self.openAlert(message);
              })
              .then(function () {
                  // always executed
@@ -175,7 +175,7 @@ class AppsList extends React.Component {
                            + "status code " + failure.response.status + " \n"
                            + "status text '" + failure.response.statusText + "'\n"
                            + failure.response.data["message"];
-                 this.openAlert(message);
+                 self.openAlert(message);
              })
              .then(function () {
                  // always executed
