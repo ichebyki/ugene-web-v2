@@ -43,12 +43,16 @@ class AppCard extends React.Component {
         }
     }
 
+    onClickStaticResult() {
+        this.props.actions.showStaticResult(this.state.app);
+    };
+
     updateApp(app) {
         if (app.staticstate !== 'STATIC_REPORT_READY') {
             let resultLink = <a href={'#'}>No results yet</a>
             this.setState({resultLink: resultLink});
         } else {
-            let resultLink = <a href={'#'}>Results are ready</a>
+            let resultLink = <a href={'#'} onClick={this.onClickStaticResult.bind(this)}>Static result</a>
             this.setState({resultLink: resultLink});
         }
         this.setState({app: app});

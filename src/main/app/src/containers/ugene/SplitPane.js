@@ -12,7 +12,8 @@ class UgeneSplitPane extends React.Component {
         if( typeof children === 'undefined' || children === null ){
             return (
                 <ReactSplitPane {...passThroughProps}>
-                    <div/> <div/>
+                    <div> </div>
+                    <div> </div>
                 </ReactSplitPane>
             );
         } else {

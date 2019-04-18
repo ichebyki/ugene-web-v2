@@ -25,7 +25,7 @@ class UgeneWorkflow extends React.Component {
                     </SplitPane>
                 </SplitPane>
                 <ScrollPane>
-                    logging pane
+                    {this.props.app.id}
                 </ScrollPane>
             </SplitPane>
         );

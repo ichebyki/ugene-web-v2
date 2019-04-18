@@ -28,3 +28,11 @@ export const closeWorkflow = (tabKey) => ({
     command: actions.UgeneWorkflow.DELETE,
     tabkey: tabKey
 });
+
+export const showStaticResult = (app) => ({
+    type: actions.StaticResultAction,
+    subType: actions.UgeneWindowWorkflow,
+    command: actions.UgeneWorkflow.CREATE,
+    app: app
+});
+

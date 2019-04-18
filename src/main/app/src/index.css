@@ -40,24 +40,24 @@ button:disabled {
 }
 
 .Resizer.horizontal {
-  height: 11px;
-  margin: -5px 0;
-  border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  height: 7px;
+  margin: -3px 0;
+  border-top: 3px solid solid rgba(0, 0, 0, 1); /*rgba(255, 255, 255, 0);*/
+  border-bottom: 3px solid solid rgba(0, 0, 0, 1); /*rgba(255, 255, 255, 0);*/
   cursor: row-resize;
   width: 100%;
 }
 
 .Resizer.horizontal:hover {
-  border-top: 5px solid rgba(0, 0, 0, 0.5);
-  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  border-top: 3px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.5);
 }
 
 .Resizer.vertical {
-  width: 11px;
-  margin: 0 -5px;
-  border-left: 5px solid rgba(255, 255, 255, 0);
-  border-right: 5px solid rgba(255, 255, 255, 0);
+  width: 7px;
+  margin: 0 -3px;
+  border-left: 3px solid rgba(0, 0, 0, 1); /*rgba(255, 255, 255, 0);*/
+  border-right: 3px solid rgba(0, 0, 0, 1); /*rgba(255, 255, 255, 0);*/
   cursor: col-resize;
 }
 

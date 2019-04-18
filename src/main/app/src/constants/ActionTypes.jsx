@@ -26,6 +26,8 @@ export const UgeneWindowAction = "UgeneWindowAction";
 export const UgeneWorkflowAction = "UgeneWorkflowAction";
 export const UgeneWorkflowElementAction = "UgeneWorkflowElementAction";
 
+export const StaticResultAction = "StaticResultAction";
+
 /* UgeneWindowAction's sub-types */
 
 export const UgeneProject = {

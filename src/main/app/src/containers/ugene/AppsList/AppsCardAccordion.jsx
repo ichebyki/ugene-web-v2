@@ -39,8 +39,15 @@ class AppsCardAccordion extends React.Component {
         }
     };
 
+    /* TODO: depricated */
     componentWillMount() {
         this.updateContent();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props !== prevProps) {
+            this.updateContent();
+        }
     }
 
     updateContent() {

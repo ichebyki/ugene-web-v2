@@ -15,7 +15,7 @@ import org.unipro.ugene.web.model.AppSettings;
 import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.security.JwtTokenUtil;
 import org.unipro.ugene.web.service.AppSettingsService;
-import org.unipro.ugene.web.service.CoverageStaticIssueService;
+import org.unipro.ugene.web.service.ReportStaticIssueService;
 import org.unipro.ugene.web.service.UserSettingsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +44,8 @@ public class CoverageRestController {
     private UserSettingsService userSettingsService;
 
     @Autowired
-    @Qualifier("coverageStaticIssueService")
-    private CoverageStaticIssueService coverageStaticIssueService;
+    @Qualifier("reportStaticIssueService")
+    private ReportStaticIssueService reportStaticIssueService;
 
     @RequestMapping(value = "/auth/apps/static/report/runsonar",
             method = RequestMethod.POST,
@@ -69,7 +69,7 @@ public class CoverageRestController {
             response.put("message", "Application settings are not set");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
-            StaticRunner runner = new StaticRunner(coverageStaticIssueService,
+            StaticRunner runner = new StaticRunner(reportStaticIssueService,
                     appSettingsService, settings, app);
             String message = runner.runSonarRunner();
 

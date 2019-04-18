@@ -83,10 +83,64 @@ export default function ReducerTabs(state = initialState, action) {
                 desc: 'This is a content of the "Workflow ' + workflowkey + '"',
                 pane: 'WORKFLOW',
                 content: JSON.stringify({
-                    type: "UgeneWorkflow",
-                    props: {},
-                    children: []
-                })
+                                            type: "StaticResult",
+                                            props: {},
+                                            children: []
+                                        })
+            };
+
+            if (state.tabs) {
+                return {
+                    ...state,
+                    tabkey: tabkey,
+                    workflowkey: workflowkey,
+                    tabs: [...state.tabs, tab]
+                }
+            } else {
+                return {
+                    ...state,
+                    tabkey: tabkey,
+                    workflowkey: workflowkey,
+                    tabs: [tab]
+                }
+            }
+        }
+        else if (action.command === UgeneActions.UgeneWorkflow.DELETE) {
+            const tab2close = state.tabs.filter(tab => tab.key === action.tabkey);
+
+            if (action.tabkey
+                && action.tabkey > 0
+                && action.tabkey <= state.tabkey
+                && tab2close[0]
+                && tab2close[0].type === "WORKFLOW") {
+                return {
+                    ...state,
+                    tabs: state.tabs.filter(tab => tab.key !== action.tabkey)
+                }
+            }
+            else {
+                console.error("ERROR: Wrong tab '" + JSON.stringify(action) + "' while closing tab");
+            }
+        }
+    }
+    /*************************************** Static result ********************************************/
+    else if (action.type === UgeneActions.StaticResultAction) {
+        let app = action.app;
+        if (action.command === UgeneActions.UgeneWorkflow.CREATE) {
+            const tabkey = state.tabkey ? state.tabkey + 1 : 1;
+            const workflowkey = state.workflowkey ? state.workflowkey + 1 : 1;
+            const tab = {
+                key: tabkey,
+                icon: 'sitemap',
+                name: "Static result - " + app.name,
+                type: 'WORKFLOW', /* TODO */
+                desc: 'This is a content of the "Static result ' + app.id + '"',
+                pane: 'WORKFLOW', /* TODO */
+                content: JSON.stringify({
+                                            type: "StaticResult",
+                                            props: {app: app},
+                                            children: []
+                                        })
             };
 
             if (state.tabs) {

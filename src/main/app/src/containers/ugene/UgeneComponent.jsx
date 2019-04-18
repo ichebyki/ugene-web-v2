@@ -2,6 +2,7 @@ import React from "react";
 
 import UgeneWorkflow from "./Workflow"
 import AppsList from "./AppsList";
+import StaticResultPane from "./Workflow/StaticResultPane";
 
 export const ParseContent = (o, actions) => {
     let content = '';
@@ -22,6 +23,8 @@ export const ParseContent = (o, actions) => {
                         return <AppsList actions={actions} {...obj.props} />
                     case "UgeneWorkflow":
                         return <UgeneWorkflow actions={actions} {...obj.props} />
+                    case "StaticResult":
+                        return <StaticResultPane actions={actions} {...obj.props} />
                     default:
                         return;
                 }

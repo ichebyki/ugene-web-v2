@@ -10,11 +10,11 @@ import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
-@Table(name = "coverage_static_issue")
+@Table(name = "report_static_issue")
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CoverageStaticIssue {
+public class ReportStaticIssue {
     /*
         Long id;
         UUID appId;

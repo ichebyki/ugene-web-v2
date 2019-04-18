@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import javafx.util.Pair;
 import org.unipro.ugene.web.model.AppSettings;
-import org.unipro.ugene.web.model.CoverageStaticIssue;
+import org.unipro.ugene.web.model.ReportStaticIssue;
 import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.service.AppSettingsService;
-import org.unipro.ugene.web.service.CoverageStaticIssueService;
+import org.unipro.ugene.web.service.ReportStaticIssueService;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -24,14 +24,14 @@ public class StaticRunner {
 
     private final UserSettings settings;
     private final AppSettings app;
-    private final CoverageStaticIssueService coverageStaticIssueService;
+    private final ReportStaticIssueService reportStaticIssueService;
     private final AppSettingsService appSettingsService;
 
-    public StaticRunner(CoverageStaticIssueService coverageStaticIssueService,
+    public StaticRunner(ReportStaticIssueService reportStaticIssueService,
                         AppSettingsService appSettingsService,
                         UserSettings settings,
                         AppSettings app) {
-        this.coverageStaticIssueService = coverageStaticIssueService;
+        this.reportStaticIssueService = reportStaticIssueService;
         this.appSettingsService = appSettingsService;
         this.settings = settings;
         this.app = app;
@@ -325,13 +325,13 @@ public class StaticRunner {
                 objectMapper = new ObjectMapper();
                 rootNode = objectMapper.readTree(jsonString);
                 JsonNode issues = rootNode.get("issues");
-                List<CoverageStaticIssue> listIssues = new ArrayList<>();
+                List<ReportStaticIssue> listIssues = new ArrayList<>();
 
                 if (issues.isArray()) {
                     ArrayNode arrayNode = (ArrayNode) issues;
                     for (int i = 0; i < arrayNode.size(); i++) {
                         //map json to object
-                        CoverageStaticIssue issue = objectMapper.convertValue(arrayNode.get(i), CoverageStaticIssue.class);
+                        ReportStaticIssue issue = objectMapper.convertValue(arrayNode.get(i), ReportStaticIssue.class);
                         UUID appid = UUID.fromString(arrayNode.get(i).get("project").textValue());
                         String source = arrayNode.get(i).get("component").textValue()
                                 .replaceFirst("^" + appid.toString(), "")
@@ -347,7 +347,7 @@ public class StaticRunner {
                         issue.setPakkage(pakkage);
                         listIssues.add(issue);
                     }
-                    coverageStaticIssueService.addCoverageStaticAllIssues(listIssues);
+                    reportStaticIssueService.addReportStaticAllIssues(listIssues);
                 }
             }
         } catch (IOException e) {
