@@ -26,6 +26,7 @@ class StaticResultPane extends React.Component {
         selectedLine: 0,
         gotSource: false,
         pane1HeightDefaultV: '50%', pane2StyleV: '50%',
+        pane1WidthDefaultH: '50%', pane2StyleH: '50%',
     };
 
     openAlert = (m) => this.setState({ openAlert: true, alertMessage: m });
@@ -197,33 +198,39 @@ class StaticResultPane extends React.Component {
 
         return (
             <SplitPane split="horizontal"
-                       minSize={0}
+                       minSize={20}
                        defaultSize={this.state.pane1HeightDefaultV}
                        primary="first"
-                       onChange={ size => {
+                       onDragFinished={ size => {
                            this.setState({splitPos101: size,
                                          pane2StyleV: 'calc(100% - ' + size + 'px)'});
                        }}
                        pane2Style ={{height: this.state.pane2StyleV}}>
-                <div>
+                <div style={{height: '100%'}}>
                     <SplitPane split="vertical"
-                               minSize={0}
+                               minSize={20}
                                defaultSize={'50%'}
-                               primary="first">
-                        <div>
+                               primary="first"
+                               style={{height: '100%'}}
+                               onDragFinished={ size => {
+                                   this.setState({splitPos201: size,
+                                                     pane2StyleH: 'calc(100% - ' + size + 'px)'});
+                               }}
+                               pane2Style ={{width: this.state.pane2StyleH}}>
+                        <div style={{height: '100%'}}>
                             <ScrollPane> {this.state.gotPackages
                                           ? <AppPackages packages={this.state.appPackages}
                                                          selected={this.state.selectedPackage}
                                                          onclick={this.onClickPackage.bind(this)}/>
-                                          : []}
+                                          : ''}
                             </ScrollPane>
                         </div>
-                        <div>
+                        <div style={{height: '100%'}}>
                             <ScrollPane> {this.state.gotClasses
                                           ? <AppClasses classes={this.state.appClasses}
                                                         selected={this.state.selectedClass}
                                                         onclick={this.onClickClass.bind(this)}/>
-                                          : []}
+                                          : ''}
                             </ScrollPane>
                         </div>
                     </SplitPane>

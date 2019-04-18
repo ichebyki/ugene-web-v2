@@ -38,13 +38,20 @@ class AppPackages extends React.Component {
 
     render() {
         let i = 0;
-        let packages = this.state.packages.map(item => {
-            ++i;
-            if (item === this.state.selected) {
-                return {key: "pack-" + i, content: item, icon: 'arrow right', as: 'a'};
-            }
-            return {key: "pack-" + i, content: item, icon: '', as: 'a'};
-        });
+        let packages;
+
+        if (this.state.packages) {
+           packages = this.state.packages.map(item => {
+                ++i;
+                if (item === this.state.selected) {
+                    return {key: "pack-" + i, content: item, icon: 'arrow right', as: 'a'};
+                }
+                return {key: "pack-" + i, content: item, icon: '', as: 'a'};
+            });
+        }
+        else {
+            packages = [];
+        }
 
         return (
             <Container style={{padding: '1em'}}>
