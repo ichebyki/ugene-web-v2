@@ -22,6 +22,7 @@ class ModalSettings extends Component {
             //dimmer: true
             //dimmer: 'inverted'
             //dimmer: 'blurring'
+        centered: this.props.centered,
         authFailed: false,
         username: '',
         userSettings: []
@@ -231,13 +232,14 @@ class ModalSettings extends Component {
     render() {
         const { userSettings } = this.state;
         const { authState } = this.props;
-        const { open, dimmer } = this.state;
+        const { open, dimmer, centered } = this.state;
 
         return (
             <Modal size="tiny"
                    dimmer={dimmer}
                    closeIcon={this.props.closeIcon}
                    open={open}
+                   centered='false'
                    closeOnDimmerClick={false}
                    closeOnDocumentClick={false}
                    onClose={this.closeModal.bind(this)}

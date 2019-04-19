@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import ScrollPane from '../../ScrollPane';
 import SplitPane from '../../SplitPane';
-import {Container, Header, List} from "semantic-ui-react";
+import {Container, Header, Icon, List, Table} from "semantic-ui-react";
 
 class AppIssues extends React.Component {
 
@@ -40,35 +40,61 @@ class AppIssues extends React.Component {
         let self = this;
         this.onItemClick.bind(this);
 
-        let issues = this.state.issues.map(item => {
-            let icon = '';
-            if (item === this.state.selected) {
-                icon = 'arrow right';
+        let tableData = this.state.issues.map(item => {
+            return {severity: item.severity, line: item.line, text: item.message };
+        });
+
+        const renderBodyRow = ({ severity, line, text }, i) => {
+            let iconName = 'minus';
+            let iconColor = 'red';
+
+            switch (severity) {
+                case 'BLOCKER':  iconColor = 'red';    iconName = 'ban'; break;
+                case 'CRITICAL': iconColor = 'red';    iconName = 'ban'; break;
+                case 'MAJOR':    iconColor = 'yellow'; iconName = 'bug'; break;
+                case 'MINOR':    iconColor = 'green';  iconName = 'warning sign'; break;
+                case 'INFO':     iconColor = 'blue';   iconName = 'warning sign'; break;
             }
             return {
-                key: "" + i++,
-                /*icon: icon,*/
-                as: 'a',
-                content: <List horizontal>
-                    <List.Item>
-                        {item.line + ":"}
-                    </List.Item>
-                    <List.Item
-                        onClick={(e, d) => self.onItemClick(e, d, item.line)}>
-                        {item.message}
-                    </List.Item>
-                </List>
-            };
-        });
+                style: {border: '0px', verticalAlign: 'bottom', cursor: 'pointer'},
+                key: `issue-${i}`,
+                verticalAlign: 'top',
+                onClick: (e) => self.onItemClick(e, {content: i}, line),
+                cells: [
+                    {
+                        style: {border: '0px', padding: '0.2em 0.4em 0.2em 0.2em'},
+                        key: 'icon',
+                        size: 'mini',
+                        verticalAlign: 'top',
+                        content: <Icon color={iconColor} name={iconName}/>,
+                    },
+                    {
+                        style: {border: '0px', padding: '0.2em 0.4em 0.2em 0.2em'},
+                        key: 'line',
+                        verticalAlign: 'top',
+                        content: line,
+                    },
+                    {
+                        style: {border: '0px', padding: '0.2em'},
+                        key: 'text',
+                        verticalAlign: 'top',
+                        content: <a>{text}</a>,
+                    },
+                ],
+            }
+        };
 
         return (
             <Container style={{padding: '1em'}}>
                 <Header>
                     Issues:
                 </Header>
-                <List compact
-                      style={{paddingLeft: '1em'}}
-                      items={issues}/>
+                <Table striped
+                       selectable
+                       style={{border: '0'}}
+                       verticalAlign={'top'}
+                       renderBodyRow={renderBodyRow}
+                       tableData={tableData} />
             </Container>
         );
     }

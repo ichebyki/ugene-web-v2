@@ -147,6 +147,7 @@ public class StaticRunner {
                     "# If not set, SonarQube starts looking for source code from the directory containing",
                     "# the sonar-project.properties file.",
                     "sonar.sources=PROJECT_SOURCES",
+                    "sonar.java.binaries=PROJECT_BINARIES",
                     ""
             );
             try (FileWriter fw = new FileWriter(sonarPropertiesTemplate)) {
@@ -181,6 +182,10 @@ public class StaticRunner {
                 else {
                     props.setProperty("sonar.sources", "src");
                 }
+
+                // sonar.java.binaries
+                props.setProperty("sonar.java.binaries",
+                        String.join(",", app.getClassPathList()));
 
                 FileOutputStream out = new FileOutputStream(sonarSettings);
                 props.store(out, Instant.now().toString());

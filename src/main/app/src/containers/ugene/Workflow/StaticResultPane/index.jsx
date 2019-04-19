@@ -35,7 +35,7 @@ class StaticResultPane extends React.Component {
         selectedIssue: 0,
         gotIssues: false,
 
-        pane1HeightDefaultV: '50%', pane2StyleV: '50%',
+        pane1HeightDefaultV: '33%', pane2StyleV: '67%',
         pane1WidthDefaultH: '25%', pane2StyleH: '75%',
         pane1WidthDefaultH2: '33%', pane2StyleH2: '67%',
     };

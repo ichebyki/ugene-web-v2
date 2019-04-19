@@ -19,31 +19,32 @@ export default class UgeneModal extends Component {
     };
 
     render() {
-        const dimmer = this.props.dimmer ? this.props.dimmer : 'inverted';
+        const dimmer = this.props.dimmer ? this.props.dimmer : 'blurring';
+        const centered = this.props.centered ? this.props.centered : 'false';
         switch (this.props.name) {
             case About:
                 return (
-                    <ModalAbout open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalAbout open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case Help:
                 return (
-                    <ModalHelp open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalHelp open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case SignIn:
                 return (
-                    <ModalSignIn open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalSignIn open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case Profile:
                 return (
-                    <ModalProfile open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalProfile open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case Settings:
                 return (
-                    <ModalSettings open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalSettings open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             case AppsAdd:
                 return (
-                    <ModalAppsEdit open={true} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
+                    <ModalAppsEdit open={true} centered={centered} dimmer={dimmer} closeIcon={this.props.closeIcon} onclose={this.props.onclose} />
                 );
             default:
                 break;

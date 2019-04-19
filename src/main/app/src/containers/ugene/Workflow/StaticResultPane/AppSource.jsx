@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import ScrollPane from '../../ScrollPane';
 import SplitPane from '../../SplitPane';
-import {Container, List, Message, Table} from "semantic-ui-react";
+import {Container, Label, List, Message, Table} from "semantic-ui-react";
 
 class IssueMessage extends React.Component {
     constructor(props) {
@@ -53,6 +53,7 @@ class AppClasses extends React.Component {
         let { source, issues } = this.props;
         let textData;
         let issuesData;
+
         if (typeof source == 'undefined' || source.length === 0) {
             return <Container/>;
         }
@@ -75,24 +76,22 @@ class AppClasses extends React.Component {
                 {
                     style: {border: '0px', padding: '0.1em 0.4em 0.1em 0.1em'},
                     key: 'line',
-                    content: i + 1
+                    content: (issuesData[i === 0 ? i : i + 1] ? i + 1 : i + 1)
                 },
                 {
                     style: {border: '0px', padding: '0.1em'},
                     key: 'text',
                     content: <div>
-                        {i == 0 ? issuesData[i] ? <IssueMessage compact
-                                                                color={'red'}
-                                                                style={{margin: '0.8em 0 0em 0em'}}
-                                                                lineNumber={i}
-                                                                onDidMountMessage={this.props.onDidMountMessage}
-                                                                content={issuesData[i]}/> : ''
-                                : issuesData[i + 1] ? <IssueMessage compact
-                                                                    color={'red'}
-                                                                    style={{margin: '0.8em 0 0em 0em'}}
-                                                                    lineNumber={i}
-                                                                    onDidMountMessage={this.props.onDidMountMessage}
-                                                                    content={issuesData[i + 1]}/> : ''}
+                        {
+                            issuesData[i === 0 ? i : i + 1] ?
+                            <IssueMessage compact
+                                          color={'red'}
+                                          style={{margin: '0.2em'}}
+                                          lineNumber={i}
+                                          onDidMountMessage={this.props.onDidMountMessage}
+                                          content={issuesData[i === 0 ? i : i + 1]}/> :
+                            ''
+                        }
                         <pre style={{padding: '0', margin: '0'}}>{text}</pre>
                     </div>,
                 },
