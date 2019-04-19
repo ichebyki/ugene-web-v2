@@ -28,15 +28,18 @@ class AppIssues extends React.Component {
                           onclick: this.props.onclick});
     }
 
-    onItemClick(e, d) {
+    onItemClick(e, d, i) {
         this.setState({selected: d.content});
         if (this.state.onclick) {
-            this.state.onclick(e, d);
+            this.state.onclick(e, d, i);
         }
     }
 
     render() {
         let i = 0;
+        let self = this;
+        this.onItemClick.bind(this);
+
         let issues = this.state.issues.map(item => {
             let icon = '';
             if (item === this.state.selected) {
@@ -50,7 +53,8 @@ class AppIssues extends React.Component {
                     <List.Item>
                         {item.line + ":"}
                     </List.Item>
-                    <List.Item>
+                    <List.Item
+                        onClick={(e, d) => self.onItemClick(e, d, item.line)}>
                         {item.message}
                     </List.Item>
                 </List>
@@ -62,9 +66,9 @@ class AppIssues extends React.Component {
                 <Header>
                     Issues:
                 </Header>
-                <List style={{paddingLeft: '1em'}}
-                      items={issues}
-                      onItemClick={this.onItemClick.bind(this)} />
+                <List compact
+                      style={{paddingLeft: '1em'}}
+                      items={issues}/>
             </Container>
         );
     }

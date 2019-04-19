@@ -40,6 +40,8 @@ class StaticResultPane extends React.Component {
         pane1WidthDefaultH2: '33%', pane2StyleH2: '67%',
     };
 
+    MessageMap = {};
+
     openAlert = (m) => this.setState({ openAlert: true, alertMessage: m });
     closeAlert = () => this.setState({ openAlert: false, alertMessage: null });
 
@@ -50,6 +52,10 @@ class StaticResultPane extends React.Component {
 
     componentDidMount() {
         this.getPakkages(this.state.app);
+    }
+
+    onDidMountMessage(i, node) {
+        this.MessageMap[i] = ReactDOM.findDOMNode(node);
     }
 
     onClickPackage(e, d) {
@@ -64,6 +70,7 @@ class StaticResultPane extends React.Component {
 
     onClickClass(e, d) {
         if (this.state.selectedClass !== d.content) {
+            this.MessageMap = {};
             this.setState({
                               selectedClass: d.content,
                               selectedLine: 0
@@ -77,9 +84,13 @@ class StaticResultPane extends React.Component {
         }
     };
 
-    onClickIssue(e, d) {
-        /*window.scrollTo(0, this.scrollRef.current.offsetTop);*/
-        this.scrollRef.scrollTop = 0;
+    onClickIssue(e, d, line) {
+        let node = this.MessageMap[line === 0 ? 0 : line - 1];
+        if (node) {
+            /*window.scrollTo(0, node.scrollTop);*/
+            /*window.scrollTo(0, this.scrollRef.current.offsetTop);*/
+            this.scrollRef.scrollTop = node.offsetTop - 64;
+        }
     };
 
     getPakkages(app) {
@@ -337,7 +348,8 @@ class StaticResultPane extends React.Component {
                     <ScrollPane containerRef={(ref) => this.scrollRef=ref}>
                         <AppSource klass={this.state.selectedClass}
                                    source={this.state.appSource}
-                                   issues={this.state.appIssues}/>
+                                   issues={this.state.appIssues}
+                                   onDidMountMessage={this.onDidMountMessage.bind(this)}/>
                     </ScrollPane>
                 </div>
             </SplitPane>
