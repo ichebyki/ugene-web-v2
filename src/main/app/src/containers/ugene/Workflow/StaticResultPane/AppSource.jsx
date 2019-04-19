@@ -9,8 +9,9 @@ import {Container, List} from "semantic-ui-react";
 
 class AppClasses extends React.Component {
     state = {
-        appClass: this.props.appClass,
-        appSource: this.props.appSource,
+        klass: this.props.klass,
+        source: this.props.source,
+        issues: this.props.issues,
     };
 
     constructor(props) {
@@ -18,28 +19,38 @@ class AppClasses extends React.Component {
     }
 
     componentDidMount() {
-        let { appSource } = this.props;
-        if (typeof appSource != 'undefined') {
-            this.setState({appSource: appSource});
+        let { source } = this.props;
+        if (typeof source != 'undefined') {
+            this.setState({source: source});
         }
     }
 
     render() {
-        let appSource = this.props.appSource;
-        if (typeof appSource == 'undefined' || appSource.length === 0) {
+        let { source, issues } = this.props;
+        if (typeof source == 'undefined' || source.length === 0) {
             return <Container/>;
         }
-        else if (typeof appSource === "string") {
-            appSource = appSource.split("\n");
+        else if (typeof source === "string") {
+            source = source.split("\n");
             let i = 0;
-            appSource = appSource.map(item => {
+            source = source.map(item => {
                 ++i;
-                return {key: "file-" + i, content: <code style={{whiteSpace: 'pre'}} font="monospaced">{item}</code> };
+                if (i === 1) {
+                    return {key: "file-" + i,
+                        content: <code style={{whiteSpace: 'pre'}}
+                                       font="monospaced">{item}</code>
+                    };
+                }
+                return {key: "file-" + i,
+                    content: <code style={{whiteSpace: 'pre'}} font="monospaced">{item}</code> };
+            });
+            issues.map(item => {
+               console.log(item.line);
             });
         }
-        else if (Array.isArray(appSource)) {
+        else if (Array.isArray(source)) {
             let i = 0;
-            appSource = this.props.appSource.map(item => {
+            source = this.props.source.map(item => {
                 ++i;
                 return {key: "file-" + i, content: <pre font="monospaced">{item}</pre> };
             });
@@ -49,7 +60,7 @@ class AppClasses extends React.Component {
             <Container fluid
                        font={'monospaced'}
                        style={{padding: '1em'}}>
-                <List  items={appSource} />
+                <List ordered items={source} />
             </Container>
         );
     }

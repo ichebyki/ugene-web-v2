@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.unipro.ugene.web.coverage.StaticRunner;
 import org.unipro.ugene.web.model.AppSettings;
+import org.unipro.ugene.web.model.ReportStaticIssue;
 import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.security.JwtTokenUtil;
 import org.unipro.ugene.web.service.AppSettingsService;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,12 +155,40 @@ public class ReportRestController {
             file = new File(file.getPath(), source);
             String result;
             try {
+                // TODO: encoding
                 result = new String(Files.readAllBytes(file.toPath()));
             } catch (IOException e) {
                 result = "Error while reading content of the file '"
                         + pakkage + File.pathSeparator + source + "'\n" + e.getMessage();
             }
             return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+    }
+
+    @RequestMapping(value = "/auth/apps/static/report/getissues",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> getStaticReportIssues(HttpServletRequest httpServletRequest,
+                                                   @RequestBody HttpRequestDTO request) {
+        AppSettings app = request.getApp();
+        String pakkage = request.getApppakkage();
+        String source = request.getAppclass();
+        if (!CheckHttpRequest(httpServletRequest, app)) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        UserSettings settings = userSettingsService.getUserSettingsByUsername(app.getUsername());
+        Map<String,String> response = new HashMap<String, String>();
+        if (settings == null) {
+            response.put("message", "User settings are not set");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else if (app == null) {
+            response.put("message", "Application settings are not set");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else {
+            List<ReportStaticIssue> issues = reportStaticIssueService.getIssuesByAppidAndPakkageAndClass(app.getId(),
+                    pakkage, source);
+            return ResponseEntity.status(HttpStatus.OK).body(issues);
         }
     }
 

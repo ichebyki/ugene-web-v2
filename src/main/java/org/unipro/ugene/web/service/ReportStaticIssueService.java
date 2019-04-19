@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.unipro.ugene.web.model.ReportStaticIssue;
 import org.unipro.ugene.web.repository.ReportStaticIssueRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,13 @@ public class ReportStaticIssueService {
             return reportStaticIssueRepository.getDistinctClassesByAppidAsc(appid);
         }
         return reportStaticIssueRepository.getDistinctClassesByAppidAndPakkageAsc(appid, pakkage);
+    }
+
+    public List<ReportStaticIssue> getIssuesByAppidAndPakkageAndClass(UUID appid, String pakkage, String source) {
+        if (appid == null || pakkage == null || source == null) {
+            return new ArrayList<>();
+        }
+        return reportStaticIssueRepository.getDistinctByAppidAndPakkageAndSourceOrderByLineAsc(appid, pakkage, source);
     }
 
 }

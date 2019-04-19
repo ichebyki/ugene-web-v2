@@ -31,6 +31,7 @@ class AppPackages extends React.Component {
     }
 
     onItemClick(e, d) {
+        this.setState({selected: d.content});
         if (this.state.onclick) {
             this.state.onclick(e, d);
         }

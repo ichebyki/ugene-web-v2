@@ -7,10 +7,10 @@ import ScrollPane from '../../ScrollPane';
 import SplitPane from '../../SplitPane';
 import {Container, Header, List} from "semantic-ui-react";
 
-class AppClasses extends React.Component {
+class AppIssues extends React.Component {
 
     state = {
-        classes: this.props.classes,
+        issues: this.props.issues,
         selected: this.props.selected,
         onclick: this.props.onclick
     };
@@ -20,16 +20,16 @@ class AppClasses extends React.Component {
     }
 
     componentDidMount() {
-        const { classes } = this.props;
-        if (typeof classes != 'undefined') {
-            this.setState({classes: classes});
+        const { issues } = this.props;
+        if (typeof issues != 'undefined') {
+            this.setState({issues: issues});
         }
         this.setState({selected: this.props.selected,
                           onclick: this.props.onclick});
     }
 
     onItemClick(e, d) {
-        this.setState({selected: d.content})
+        this.setState({selected: d.content});
         if (this.state.onclick) {
             this.state.onclick(e, d);
         }
@@ -37,25 +37,37 @@ class AppClasses extends React.Component {
 
     render() {
         let i = 0;
-        let classes = this.state.classes.map(item => {
-            ++i;
+        let issues = this.state.issues.map(item => {
+            let icon = '';
             if (item === this.state.selected) {
-                return {key: "klas-" + i, content: item, icon: 'arrow right', as: 'a'};
+                icon = 'arrow right';
             }
-            return {key: "klas-" + i, content: item, icon: '', as: 'a'};
+            return {
+                key: "" + i++,
+                /*icon: icon,*/
+                as: 'a',
+                content: <List horizontal>
+                    <List.Item>
+                        {item.line + ":"}
+                    </List.Item>
+                    <List.Item>
+                        {item.message}
+                    </List.Item>
+                </List>
+            };
         });
 
         return (
             <Container style={{padding: '1em'}}>
                 <Header>
-                    Classes:
+                    Issues:
                 </Header>
                 <List style={{paddingLeft: '1em'}}
-                      items={classes}
+                      items={issues}
                       onItemClick={this.onItemClick.bind(this)} />
             </Container>
         );
     }
 }
 
-export default AppClasses;
+export default AppIssues;
