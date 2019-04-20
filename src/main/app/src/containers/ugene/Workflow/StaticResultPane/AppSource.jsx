@@ -53,6 +53,7 @@ class AppClasses extends React.Component {
         let { source, issues } = this.props;
         let textData;
         let issuesData;
+        let issuesSeverity;
 
         if (typeof source == 'undefined' || source.length === 0) {
             return <Container/>;
@@ -67,16 +68,32 @@ class AppClasses extends React.Component {
                 map[obj.line] = <div>Line: {obj.line}<div>{obj.message}</div></div>;
                 return map;
             }, {});
+            issuesSeverity = issues.reduce(function(map, obj) {
+                map[obj.line] = obj.severity;
+                return map;
+            }, {});
         }
 
-        const renderBodyRow = ({ text }, i) => ({
-            style: {border: '0px', verticalAlign: 'bottom'},
-            key: `line-${i}`,
-            cells: [
+        const renderBodyRow = ({ text }, i) => {
+            let color = 'red';
+
+            if (issuesSeverity[i === 0 ? i : i + 1]) {
+                switch (issuesSeverity[i === 0 ? i : i + 1]) {
+                    case 'BLOCKER':  color = 'red';    break;
+                    case 'CRITICAL': color = 'red';    break;
+                    case 'MAJOR':    color = 'yellow'; break;
+                    case 'MINOR':    color = 'green';  break;
+                    case 'INFO':     color = 'blue';   break;
+                }
+            }
+            return {
+                style: {border: '0px', verticalAlign: 'bottom'},
+                key: `line-${i}`,
+                    cells: [
                 {
                     style: {border: '0px', padding: '0.1em 0.4em 0.1em 0.1em'},
                     key: 'line',
-                    content: (issuesData[i === 0 ? i : i + 1] ? i + 1 : i + 1)
+                    content: (i + 1)
                 },
                 {
                     style: {border: '0px', padding: '0.1em'},
@@ -85,18 +102,19 @@ class AppClasses extends React.Component {
                         {
                             issuesData[i === 0 ? i : i + 1] ?
                             <IssueMessage compact
-                                          color={'red'}
+                                          color={color}
                                           style={{margin: '0.2em'}}
                                           lineNumber={i}
                                           onDidMountMessage={this.props.onDidMountMessage}
-                                          content={issuesData[i === 0 ? i : i + 1]}/> :
+                                          content={issuesData[i === 0 ? i : i + 1]} /> :
                             ''
                         }
                         <pre style={{padding: '0', margin: '0'}}>{text}</pre>
                     </div>,
                 },
             ],
-        });
+            }
+        };
 
         return (
             <Container fluid

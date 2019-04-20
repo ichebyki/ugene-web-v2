@@ -1,6 +1,7 @@
 package org.unipro.ugene.web.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.unipro.ugene.web.model.ReportStaticIssue;
 
@@ -19,5 +20,13 @@ public interface ReportStaticIssueRepository extends JpaRepository<ReportStaticI
     List<String> getDistinctClassesByAppidAsc(UUID appid);
 
     List<ReportStaticIssue> getDistinctByAppidAndPakkageAndSourceOrderByLineAsc(UUID appid, String pakkage, String source);
+
+    Long deleteByAppid(UUID appid);
+
+    @Modifying
+    @Query("delete from ReportStaticIssue u where u.appid = ?1")
+    void deleteInBulkByAppid(UUID appid);
+
+
 
 }

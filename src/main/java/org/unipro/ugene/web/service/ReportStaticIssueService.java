@@ -2,6 +2,7 @@ package org.unipro.ugene.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.unipro.ugene.web.model.ReportStaticIssue;
 import org.unipro.ugene.web.repository.ReportStaticIssueRepository;
 
@@ -21,6 +22,11 @@ public class ReportStaticIssueService {
     public boolean addReportStaticIssue(ReportStaticIssue issue) {
         ReportStaticIssue save = reportStaticIssueRepository.save(issue);
         return save != null;
+    }
+
+    @Transactional
+    public void deleteAllByAppid(UUID appid) {
+        reportStaticIssueRepository.deleteInBulkByAppid(appid);
     }
 
     public boolean addReportStaticAllIssues(List<ReportStaticIssue> issues) {

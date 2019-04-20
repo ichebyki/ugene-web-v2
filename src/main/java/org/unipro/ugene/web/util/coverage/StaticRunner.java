@@ -1,4 +1,4 @@
-package org.unipro.ugene.web.coverage;
+package org.unipro.ugene.web.util.coverage;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -352,6 +352,7 @@ public class StaticRunner {
                         issue.setPakkage(pakkage);
                         listIssues.add(issue);
                     }
+                    reportStaticIssueService.deleteAllByAppid(app.getId());
                     reportStaticIssueService.addReportStaticAllIssues(listIssues);
                 }
             }

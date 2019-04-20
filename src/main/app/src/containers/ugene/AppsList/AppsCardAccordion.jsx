@@ -179,7 +179,7 @@ class AppsCardAccordion extends React.Component {
                 {
                     key: `panel-static`,
                     title: {
-                        content: <span style={{fontSize: "1.2em"}}>Static coverage</span>,
+                        content: <span style={{fontSize: "1.2em"}}>Static analyze</span>,
                     },
                     content: {
                         style: {

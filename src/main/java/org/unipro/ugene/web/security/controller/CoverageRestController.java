@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.unipro.ugene.web.coverage.StaticRunner;
+import org.unipro.ugene.web.util.coverage.StaticRunner;
 import org.unipro.ugene.web.model.AppSettings;
 import org.unipro.ugene.web.model.UserSettings;
 import org.unipro.ugene.web.security.JwtTokenUtil;

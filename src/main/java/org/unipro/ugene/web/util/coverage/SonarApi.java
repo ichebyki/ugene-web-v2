@@ -1,4 +1,4 @@
-package org.unipro.ugene.web.coverage;
+package org.unipro.ugene.web.util.coverage;
 
 import javafx.util.Pair;
 import org.unipro.ugene.web.model.AppSettings;

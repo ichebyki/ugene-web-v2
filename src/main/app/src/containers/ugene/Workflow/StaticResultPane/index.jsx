@@ -59,29 +59,25 @@ class StaticResultPane extends React.Component {
     }
 
     onClickPackage(e, d) {
-        if (this.state.selectedPackage !== d.content) {
-            this.setState({
-                              selectedPackage: d.content,
-                              selectedClass: null
-                          });
-            this.getClasses(this.state.app, d.content);
-        }
+        this.setState({
+                          selectedPackage: d.content,
+                          selectedClass: null
+                      });
+        this.getClasses(this.state.app, d.content);
     };
 
     onClickClass(e, d) {
-        if (this.state.selectedClass !== d.content) {
-            this.MessageMap = {};
-            this.setState({
-                              selectedClass: d.content,
-                              selectedLine: 0
-                          });
-            this.getSource(this.state.app,
-                           this.state.selectedPackage,
-                           d.content);
-            this.getIssues(this.state.app,
-                           this.state.selectedPackage,
-                           d.content);
-        }
+        this.MessageMap = {};
+        this.setState({
+                          selectedClass: d.content,
+                          selectedLine: 0
+                      });
+        this.getSource(this.state.app,
+                       this.state.selectedPackage,
+                       d.content);
+        this.getIssues(this.state.app,
+                       this.state.selectedPackage,
+                       d.content);
     };
 
     onClickIssue(e, d, line) {
