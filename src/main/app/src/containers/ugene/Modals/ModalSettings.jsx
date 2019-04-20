@@ -239,7 +239,7 @@ class ModalSettings extends Component {
                    dimmer={dimmer}
                    closeIcon={this.props.closeIcon}
                    open={open}
-                   centered='false'
+                   centered={false}
                    closeOnDimmerClick={false}
                    closeOnDocumentClick={false}
                    onClose={this.closeModal.bind(this)}

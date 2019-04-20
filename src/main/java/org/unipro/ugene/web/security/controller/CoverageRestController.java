@@ -17,10 +17,12 @@ import org.unipro.ugene.web.security.JwtTokenUtil;
 import org.unipro.ugene.web.service.AppSettingsService;
 import org.unipro.ugene.web.service.ReportStaticIssueService;
 import org.unipro.ugene.web.service.UserSettingsService;
+import org.unipro.ugene.web.util.tasks.TaskExecutorService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 
 @RestController
@@ -47,6 +49,10 @@ public class CoverageRestController {
     @Qualifier("reportStaticIssueService")
     private ReportStaticIssueService reportStaticIssueService;
 
+    @Autowired
+    @Qualifier("UniproTaskExecutorService")
+    private TaskExecutorService taskExecutorService;
+
     @RequestMapping(value = "/auth/apps/static/report/runsonar",
             method = RequestMethod.POST,
             consumes = "application/json")
@@ -69,9 +75,19 @@ public class CoverageRestController {
             response.put("message", "Application settings are not set");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
-            StaticRunner runner = new StaticRunner(reportStaticIssueService,
+            final StaticRunner runner = new StaticRunner(reportStaticIssueService,
                     appSettingsService, settings, app);
-            String message = runner.runSonarRunner();
+
+            Future<?> future = taskExecutorService.submit(app.getId().toString()
+                    ,(Callable<String>) () -> runner.runSonarRunner());
+            String message = null;
+            /*for (int i = 0; i < 100; i++) {
+                try {
+                    message = (String) future.get(1, TimeUnit.SECONDS); // use future
+                } catch (ExecutionException | InterruptedException | TimeoutException ex) {
+                }
+            }*/
+            //String message = runner.runSonarRunner();
 
             if (message == null) {
                 return ResponseEntity.status(HttpStatus.OK).body(null);
@@ -79,6 +95,40 @@ public class CoverageRestController {
             else {
                 response.put("message", message);
                 return ResponseEntity.badRequest().body(response);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/auth/apps/static/report/checktask",
+            method = RequestMethod.POST,
+            consumes = "application/json")
+    public ResponseEntity<?> coverageCheckTask(HttpServletRequest httpServletRequest,
+                                               @RequestBody AppSettings request) {
+        AppSettings app = appSettingsService.getAppSettingsById(request.getId());
+
+        String token = httpServletRequest.getHeader(tokenHeader).substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        if (!username.equals(request.getUsername())) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        UserSettings settings = userSettingsService.getUserSettingsByUsername(username);
+        Map<String,String> response = new HashMap<String, String>();
+        if (settings == null) {
+            response.put("message", "User settings are not set");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else if (app == null) {
+            response.put("message", "Application settings are not set");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else {
+            boolean isRun = taskExecutorService.isRun(app.getId().toString());
+
+            if (!isRun) {
+                return ResponseEntity.status(HttpStatus.OK).body(null);
+            }
+            else {
+                response.put("isRun", "true");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
             }
         }
     }

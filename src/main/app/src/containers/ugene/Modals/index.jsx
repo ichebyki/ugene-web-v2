@@ -20,7 +20,7 @@ export default class UgeneModal extends Component {
 
     render() {
         const dimmer = this.props.dimmer ? this.props.dimmer : 'blurring';
-        const centered = this.props.centered ? this.props.centered : 'false';
+        const centered = this.props.centered ? this.props.centered : false;
         switch (this.props.name) {
             case About:
                 return (

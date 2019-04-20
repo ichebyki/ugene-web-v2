@@ -128,6 +128,7 @@ class AppsList extends React.Component {
              .then(function (success) {
                  if (success.status === 200) {
                      message = `Started static analyzer: ${success.statusText}`;
+                     self.chekTaskCompleted(app);
                  }
                  else {
                      message = "Failed to start static analyzer \n"
@@ -150,6 +151,43 @@ class AppsList extends React.Component {
              });
         setTimeout( () => self.getAllAppList(), 1000);
     };
+
+    chekTaskCompleted(app) {
+        let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
+        let self = this;
+
+        setTimeout(function tick() {
+            let message = '';
+            let checkAgain = true;
+
+            axios.post('/auth/apps/static/report/checktask',
+                       app,
+                       { headers: {authorization: headerToken} })
+                 .then(function (success) {
+                     if (success.status === 200) {
+                         message = `Completed static analyzer: ${success.statusText}`;
+                         checkAgain = false;
+                     }
+                     else {
+                         message = success.statusText;
+                     }
+                 })
+                 .catch(function (failure) {
+                     self.openAlert(message = failure.response.statusText);
+                 })
+                 .then(function () {
+                     // always executed
+                     console.error(message);
+
+                     if (checkAgain) {
+                         setTimeout(tick, 2000);
+                     }
+                     else {
+                         self.getAllAppList();
+                     }
+                 });
+        }, 2000);
+    }
 
     onGetStaticReport(e, d, app, accordion) {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
