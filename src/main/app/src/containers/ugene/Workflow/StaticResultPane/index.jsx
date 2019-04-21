@@ -82,10 +82,10 @@ class StaticResultPane extends React.Component {
 
     onClickIssue(e, d, line) {
         let node = this.MessageMap[line === 0 ? 0 : line - 1];
-        if (node) {
+        if (node && node.children) {
             /*window.scrollTo(0, node.scrollTop);*/
             /*window.scrollTo(0, this.scrollRef.current.offsetTop);*/
-            this.scrollRef.scrollTop = node.offsetTop - 64;
+            this.scrollRef.scrollTop = node.children[0].offsetTop - 64;
         }
     };
 

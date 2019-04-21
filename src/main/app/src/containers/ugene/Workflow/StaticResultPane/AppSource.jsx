@@ -22,12 +22,31 @@ class IssueMessage extends React.Component {
     }
 
     render() {
-        const { lineNumber, onDidMountMessage, ...passThroughProps } = this.props;
-        return (
-            <Message
-                {...passThroughProps}
-            />
-        )
+        const { lineNumber, onDidMountMessage, content,  ...passThroughProps } = this.props;
+        let color = 'red';
+        let content2 = [];
+        for (let key in content) {
+            let value = content[key];
+            switch (key) {
+                case 'BLOCKER':  color = 'red';    break;
+                case 'CRITICAL': color = 'red';    break;
+                case 'MAJOR':    color = 'yellow'; break;
+                case 'MINOR':    color = 'green';  break;
+                case 'INFO':     color = 'blue';   break;
+            }
+            content2.push(
+                <div key={key}>
+                    <Message
+                        attached={'bottom'}
+                        key={key}
+                        color={color}
+                        content={value}
+                        {...passThroughProps}
+                    />
+                </div>
+            );
+        }
+        return (content2);
     }
 }
 
@@ -65,7 +84,10 @@ class AppClasses extends React.Component {
                 return {text: item };
             });
             issuesData = issues.reduce(function(map, obj) {
-                map[obj.line] = <div>Line: {obj.line}<div>{obj.message}</div></div>;
+                if (!(obj.line in map)) {
+                    map[obj.line] = {};
+                }
+                map[obj.line][obj.severity] = <div>Line: {obj.line}<div>{obj.message}</div></div> ;
                 return map;
             }, {});
             issuesSeverity = issues.reduce(function(map, obj) {
@@ -76,16 +98,6 @@ class AppClasses extends React.Component {
 
         const renderBodyRow = ({ text }, i) => {
             let color = 'red';
-
-            if (issuesSeverity[i === 0 ? i : i + 1]) {
-                switch (issuesSeverity[i === 0 ? i : i + 1]) {
-                    case 'BLOCKER':  color = 'red';    break;
-                    case 'CRITICAL': color = 'red';    break;
-                    case 'MAJOR':    color = 'yellow'; break;
-                    case 'MINOR':    color = 'green';  break;
-                    case 'INFO':     color = 'blue';   break;
-                }
-            }
             return {
                 style: {border: '0px', verticalAlign: 'bottom'},
                 key: `line-${i}`,
@@ -100,14 +112,13 @@ class AppClasses extends React.Component {
                     key: 'text',
                     content: <div>
                         {
-                            issuesData[i === 0 ? i : i + 1] ?
-                            <IssueMessage compact
-                                          color={color}
+                            issuesData[i === 0 ? i : i + 1]
+                            ? <IssueMessage compact
                                           style={{margin: '0.2em'}}
                                           lineNumber={i}
                                           onDidMountMessage={this.props.onDidMountMessage}
-                                          content={issuesData[i === 0 ? i : i + 1]} /> :
-                            ''
+                                          content={issuesData[i === 0 ? i : i + 1]} />
+                            : ''
                         }
                         <pre style={{padding: '0', margin: '0'}}>{text}</pre>
                     </div>,
