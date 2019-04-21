@@ -139,7 +139,7 @@ class App extends Component {
                                fluid >
                         <UgeneTabPane className="ugene-app-tab-pane"
                                       actions={this.props.actions}
-                                      renderActiveOnly
+                                      renderActiveOnly={true}
                                       tabs={tabs} />
                     </Container>
                 </UgeneSideBar>

@@ -3,8 +3,9 @@ import React from "react";
 import UgeneWorkflow from "./Workflow"
 import AppsList from "./AppsList";
 import StaticResultPane from "./Workflow/StaticResultPane";
+import UgeneTabPane from "./TabPane/TabPane";
 
-export const ParseContent = (o, actions) => {
+const ParseContent = (o, actions) => {
     let content = '';
     if (o && o.type) {
         if (o.type === 'STARTPAGE') {
@@ -36,3 +37,5 @@ export const ParseContent = (o, actions) => {
     }
     return <div >{content ? content.toString() : ""}</div>
 };
+
+export default ParseContent;

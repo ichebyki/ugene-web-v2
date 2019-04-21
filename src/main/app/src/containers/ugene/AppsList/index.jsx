@@ -180,13 +180,13 @@ class AppsList extends React.Component {
                      console.error(message);
 
                      if (checkAgain) {
-                         setTimeout(tick, 2000);
+                         setTimeout(tick, 5000);
                      }
                      else {
-                         self.getAllAppList();
+                         setTimeout( () => self.getAllAppList(), 2000);
                      }
                  });
-        }, 2000);
+        }, 5000);
     }
 
     onGetStaticReport(e, d, app, accordion) {

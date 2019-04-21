@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import { Tab as SemanticTab, Menu, Icon, Label } from 'semantic-ui-react';
 
-import * as UgeneComponent from "../UgeneComponent"
+import ParseContent from "../UgeneComponent"
 import "./TabPane.css";
 
 class UgeneTabPane extends Component {
@@ -10,7 +10,7 @@ class UgeneTabPane extends Component {
     static propTypes = {
         renderActiveOnly: PropTypes.bool.isRequired,
         tabs: PropTypes.array.isRequired,
-        actions: PropTypes.object.isRequired
+        actions: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -20,8 +20,19 @@ class UgeneTabPane extends Component {
         const firstTab = tabs[0];
 
         this.state = {
-            currentTab : firstTab.name
+            currentTab : firstTab.name,
+            activeIndex: 0,
         };
+    }
+
+    onTabChange(event, data) {
+        /*event
+        React's original SyntheticEvent.
+        data
+        All props and proposed new activeIndex.
+        data.activeIndex
+        The new proposed activeIndex.*/
+        this.setState({activeIndex: data.activeIndex});
     }
 
     render() {
@@ -29,7 +40,7 @@ class UgeneTabPane extends Component {
         // passed through
         const {renderActiveOnly, tabs = [{menuitem : "New tab", content: "", type: ""}], actions} = this.props;
         const onClickX = (e, k, t) => {
-            e.preventDefault();
+            /*e.preventDefault();*/
             if (t === "WORKFLOW") {
                 this.props.actions.closeWorkflow(k, t);
             }
@@ -41,7 +52,7 @@ class UgeneTabPane extends Component {
         const panes = tabs.map(tab => {
             const menuItem = tab.menuItem;
             const tabtype = tab.type;
-            const content = UgeneComponent.ParseContent(tab, actions);
+            const content = ParseContent(tab, actions);
             const borders = {borderBottom: 'none', borderRight: 'none', borderLeft: 'none'};
             const xStyle = {backgroundColor: 'transparent', color: 'red', border: 'none', paddingLeft: 0};
 
@@ -52,14 +63,14 @@ class UgeneTabPane extends Component {
                             <Icon name={menuItem.icon}/>
                             {menuItem.content}
                             <Label style={xStyle}
-                                   basic
-                            >
+                                   basic>
                                 <sup> </sup>
                             </Label>
                         </Menu.Item>
                     ),
                     render: () =>
-                        <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
+                        <SemanticTab.Pane className={'ugene-tab-tab-pane'}
+                                          style={borders}>
                             {content}
                         </SemanticTab.Pane>
                 };
@@ -72,14 +83,14 @@ class UgeneTabPane extends Component {
                             {menuItem.content}
                             <Label style={xStyle}
                                    basic
-                                   onClick={(e) => onClickX.bind(this)(e, menuItem.key, tabtype)}
-                            >
+                                   onClick={(e) => onClickX.bind(this)(e, menuItem.key, tabtype)}>
                                 <sup>X</sup>
                             </Label>
                         </Menu.Item>
                     ),
                     render: () =>
-                        <SemanticTab.Pane className={'ugene-tab-tab-pane'} style={borders}>
+                        <SemanticTab.Pane className={'ugene-tab-tab-pane'}
+                                          style={borders}>
                             {content}
                         </SemanticTab.Pane>
                 };
@@ -92,6 +103,8 @@ class UgeneTabPane extends Component {
                     className={'ugene-tab-pane-tab'}
                     menu={{ /*pointing: true, */className: "ugene-tab-menu-wrapped" }}
                     renderActiveOnly={renderActiveOnly}
+                    onTabChange={this.onTabChange.bind(this)}
+                    activeIndex={this.state.activeIndex}
                     panes={panes}
                 />
             </div>
