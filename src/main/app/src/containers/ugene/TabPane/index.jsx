@@ -22,7 +22,6 @@ export default class UgeneTabPane extends Component {
                 pane: 'default',
                 content: 'This is a content of the pane "Home"'
             }],
-            activeIndex,
             ...otherProps
         } = this.props;
 

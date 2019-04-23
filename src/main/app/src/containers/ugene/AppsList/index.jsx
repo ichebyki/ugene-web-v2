@@ -128,7 +128,7 @@ class AppsList extends React.Component {
              .then(function (success) {
                  if (success.status === 200) {
                      message = `Started static analyzer: ${success.statusText}`;
-                     self.chekTaskCompleted(app);
+                     self.checkTaskCompleted(app);
                  }
                  else {
                      message = "Failed to start static analyzer \n"
@@ -146,13 +146,15 @@ class AppsList extends React.Component {
              })
              .then(function () {
                  // always executed
-                 console.error(message);
+                 console.info(message);
                  self.getAllAppList();
              });
-        setTimeout( () => self.getAllAppList(), 1000);
+        setTimeout( () => {
+            self.getAllAppList()
+        }, 1000);
     };
 
-    chekTaskCompleted(app) {
+    checkTaskCompleted(app) {
         let headerToken = `Bearer ${localStorage.getItem(Names.JWT_TOKEN)}`;
         let self = this;
 
@@ -177,13 +179,16 @@ class AppsList extends React.Component {
                  })
                  .then(function () {
                      // always executed
-                     console.error(message);
+                     console.info(message);
 
                      if (checkAgain) {
                          setTimeout(tick, 5000);
+                         self.refreshShoeList();
                      }
                      else {
-                         setTimeout( () => self.getAllAppList(), 2000);
+                         setTimeout( () => {
+                             self.getAllAppList();
+                         }, 2000);
                      }
                  });
         }, 5000);

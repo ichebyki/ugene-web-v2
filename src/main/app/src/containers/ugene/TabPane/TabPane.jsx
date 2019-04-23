@@ -4,6 +4,8 @@ import { Tab as SemanticTab, Menu, Icon, Label } from 'semantic-ui-react';
 
 import ParseContent from "../UgeneComponent"
 import "./TabPane.css";
+import {connect} from "react-redux";
+import {login, logout} from "../../../data/modules/auth";
 
 class UgeneTabPane extends Component {
 
@@ -59,7 +61,8 @@ class UgeneTabPane extends Component {
             if (tabtype === 'STARTPAGE') {
                 return {
                     menuItem: (
-                        <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'}>
+                        <Menu.Item key={'tab-menu-' + menuItem.key}
+                                   className={'ugene-tab-menu-item'}>
                             <Icon name={menuItem.icon}/>
                             {menuItem.content}
                             <Label style={xStyle}
@@ -69,7 +72,8 @@ class UgeneTabPane extends Component {
                         </Menu.Item>
                     ),
                     render: () =>
-                        <SemanticTab.Pane className={'ugene-tab-tab-pane'}
+                        <SemanticTab.Pane key={'semantic-tab-' + menuItem.key}
+                                          className={'ugene-tab-tab-pane'}
                                           style={borders}>
                             {content}
                         </SemanticTab.Pane>
@@ -78,7 +82,8 @@ class UgeneTabPane extends Component {
             else {
                 return {
                     menuItem: (
-                        <Menu.Item key={menuItem.key} className={'ugene-tab-menu-item'}>
+                        <Menu.Item key={'tab-menu-' + menuItem.key}
+                                   className={'ugene-tab-menu-item'}>
                             <Icon name={menuItem.icon}/>
                             {menuItem.content}
                             <Label style={xStyle}
@@ -89,7 +94,8 @@ class UgeneTabPane extends Component {
                         </Menu.Item>
                     ),
                     render: () =>
-                        <SemanticTab.Pane className={'ugene-tab-tab-pane'}
+                        <SemanticTab.Pane key={'semantic-tab-' + menuItem.key}
+                                          className={'ugene-tab-tab-pane'}
                                           style={borders}>
                             {content}
                         </SemanticTab.Pane>
@@ -112,4 +118,14 @@ class UgeneTabPane extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    activeIndex: state.activeIndex
+});
+
+export default connect(
+    mapStateToProps
+) (UgeneTabPane);
+
+/*
 export default UgeneTabPane;
+*/
